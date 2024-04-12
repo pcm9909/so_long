@@ -16,10 +16,6 @@ typedef struct s_vars
     void    *win;
 }           t_vars;
 
-int click(int keycode, t_vars *vars)
-{
-    
-}
 
 
 void    my_mlx_pixel_put(t_data *data, int x, int y, int color)

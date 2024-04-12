@@ -26,8 +26,6 @@ int main()
     var.win = mlx_new_window(var.mlx, 1920, 1080, "img test");
     img.img = mlx_xpm_file_to_image(var.mlx, img.relative_path, &img.img_width, &img.img_height);
     mlx_put_image_to_window(var.mlx, var.win, img.img, 30, 30); // 이미지를 화면으로 쏘는 것 
-    mlx_hook(var.win, );
-
 
    mlx_loop(var.mlx);
 }
