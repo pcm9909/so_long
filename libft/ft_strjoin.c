@@ -3,12 +3,13 @@
 /*                                                        :::      ::::::::   */
 /*   ft_strjoin.c                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: chunpark <marvin@42.fr>                    +#+  +:+       +#+        */
+/*   By: chunpark <chunpark@student.42gyeongsan.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/29 11:24:25 by chunpark          #+#    #+#             */
-/*   Updated: 2024/02/29 11:25:06 by chunpark         ###   ########.fr       */
+/*   Updated: 2024/04/13 05:26:46 by chunpark         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
+
 #include "libft.h"
 
 char	*ft_strjoin(char const *s1, char const *s2)
@@ -24,5 +25,6 @@ char	*ft_strjoin(char const *s1, char const *s2)
 		return (NULL);
 	ft_strlcpy (str, s1, ft_strlen(s1) + 1);
 	ft_strlcat (str, s2, len + 1);
+	free((char *)s1);
 	return (str);
 }

@@ -18,8 +18,8 @@ typedef struct s_vars
 
 int main()
 {
-    t_vars var;
-    t_data img;
+    t_vars  var;
+    t_data  img;
 
     img.relative_path = "./a.xpm";
     var.mlx = mlx_init();
@@ -27,5 +27,5 @@ int main()
     img.img = mlx_xpm_file_to_image(var.mlx, img.relative_path, &img.img_width, &img.img_height);
     mlx_put_image_to_window(var.mlx, var.win, img.img, 30, 30); // 이미지를 화면으로 쏘는 것 
 
-   mlx_loop(var.mlx);
+    mlx_loop(var.mlx);
 }
