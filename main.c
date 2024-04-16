@@ -115,27 +115,21 @@ int main(int argc, char **argv)
                         cntP++;
                     else if (map[i][j] == 'E')
                         cntE++;
+                    else if (map[i][j] != '1' && map[i][j] != '0')
+                    {
+                        printf("bad input\n");
+                        return 0;
+                    }
                     j++;
                 }
                 i++;
             }
 
-            if (cntC != 1)
+            if (cntC < 1 || cntP != 1 || cntE != 1)
             {
                 printf("error C\n");
                 return (0);
             }
-            if (cntP != 1)
-            {
-                printf("error P\n");
-                return (0);
-            }
-            if (cntE != 1)
-            {
-                printf("error E\n");
-                return (0);
-            }
-
             img.relative_path = "./test.xpm";
             img1.relative_path = "./test1.xpm";
             img2.relative_path = "./test2.xpm";
