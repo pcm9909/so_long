@@ -89,17 +89,38 @@ typedef struct s_param
 # define EXIT_ESC			65307
 # define EXIT_BUTTON		17
 
+//mac
+// #define UP_W 13
+// #define DOWN_S 1
+// #define LEFT_A 0
+// #define RIGHT_D 2
+// #define EXIT_ESC 53
+// #define EXIT_BUTTON 17
+int cnt = 0;
 int	key_press(int keycode, t_param *p)
 {
-    printf("%d",keycode);
+	
+    printf("%d\n",cnt);
 	if (keycode == UP_W && p->play_y != 0)
+	{
 		p->play_y -= p->img_y;
-	if (keycode == DOWN_S && p->play_y != 480)
+		cnt++;
+	}
+	if (keycode == DOWN_S && p->play_y != 700)
+	{
 		p->play_y += p->img_y;
+		cnt++;
+	}
 	else if (keycode == LEFT_A && p->play_x != 0)
+	{
 		p->play_x -= p->img_x;
-	else if (keycode == RIGHT_D && p->play_x != 480)
+		cnt++;
+	}
+	else if (keycode == RIGHT_D && p->play_x != 900)
+	{
 		p->play_x += p->img_x;
+		cnt++;
+	}
 	else if (keycode == EXIT_ESC)
 		exit(0);
 	else if (keycode == EXIT_BUTTON)
