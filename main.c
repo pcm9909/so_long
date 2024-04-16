@@ -4,6 +4,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <fcntl.h>
+#define BLOCK 70
 
 typedef struct s_data
 {
@@ -38,7 +39,11 @@ int main(int argc, char **argv)
     char *line;
     int height = 0;
     char **map;
-    t_data  img;
+    t_data  img; // 0
+    t_data  img1; // C
+    t_data  img2; // 1
+    t_data  img3; // P
+    t_data  img4; // E
     t_vars  var;
 
     if (argc == 2)
@@ -86,6 +91,7 @@ int main(int argc, char **argv)
                 }
                 i++;
             }
+            //check 테두리
             i = 0;
             while (i < height)
             {
@@ -96,21 +102,77 @@ int main(int argc, char **argv)
                 }
                 i++;
             }
+            int cntC = 0, cntP = 0, cntE = 0;
+            i = 1;
+            while (i < height - 1)
+            {
+                int j = 1;
+                while (j < baselen - 1)
+                {
+                    if (map[i][j] == 'C')
+                        cntC++;
+                    else if (map[i][j] == 'P')
+                        cntP++;
+                    else if (map[i][j] == 'E')
+                        cntE++;
+                    j++;
+                }
+                i++;
+            }
+
+            if (cntC != 1)
+            {
+                printf("error C\n");
+                return (0);
+            }
+            if (cntP != 1)
+            {
+                printf("error P\n");
+                return (0);
+            }
+            if (cntE != 1)
+            {
+                printf("error E\n");
+                return (0);
+            }
+
+            img.relative_path = "./test.xpm";
+            img1.relative_path = "./test1.xpm";
+            img2.relative_path = "./test2.xpm";
+            img3.relative_path = "./test3.xpm";
+            img4.relative_path = "./test4.xpm";
+            var.mlx = mlx_init();
+            var.win = mlx_new_window(var.mlx, baselen * BLOCK, height * BLOCK, "img test");
+            //1
+            img.img = mlx_xpm_file_to_image(var.mlx, img.relative_path, &img.img_width, &img.img_height);
+            //0
+            img2.img = mlx_xpm_file_to_image(var.mlx, img2.relative_path, &img2.img_width, &img2.img_height);
+            //P
+            img3.img = mlx_xpm_file_to_image(var.mlx, img3.relative_path, &img3.img_width, &img3.img_height);
+            //C
+            img4.img = mlx_xpm_file_to_image(var.mlx, img4.relative_path, &img4.img_width, &img4.img_height);
+            //E
+            img1.img = mlx_xpm_file_to_image(var.mlx, img1.relative_path, &img1.img_width, &img1.img_height);
             int h = 0;
             int w = 0;
-            img.relative_path = "./test.xpm";
-            var.mlx = mlx_init();
-            var.win = mlx_new_window(var.mlx, height * 100, baselen * 100, "img test");
-            img.img = mlx_xpm_file_to_image(var.mlx, img.relative_path, &img.img_width, &img.img_height);
             for (int i = 0; i < height; i++)
             {   
-                
+                w = 0;
                 for (int k = 0; k < baselen; k++)
                 {
-                    mlx_put_image_to_window(var.mlx, var.win, img.img, h, w); // 이미지를 화면으로 쏘는 것
-                    w += 100;
+                    if(map[i][k] == '1')
+                        mlx_put_image_to_window(var.mlx, var.win, img.img, w, h); // 이미지를 화면으로 쏘는 것
+                    if(map[i][k] == '0')
+                        mlx_put_image_to_window(var.mlx, var.win, img2.img, w, h); // 이미지를 화면으로 쏘는 것
+                    if(map[i][k] == 'P')
+                        mlx_put_image_to_window(var.mlx, var.win, img3.img, w, h); // 이미지를 화면으로 쏘는 것
+                    if(map[i][k] == 'C')
+                        mlx_put_image_to_window(var.mlx, var.win, img4.img, w, h); // 이미지를 화면으로 쏘는 것
+                    if(map[i][k] == 'E')
+                        mlx_put_image_to_window(var.mlx, var.win, img1.img, w, h); // 이미지를 화면으로 쏘는 것
+                    w += BLOCK;
                 }
-                h += 100;
+                h += BLOCK;
             } 
             mlx_loop(var.mlx);
         }
