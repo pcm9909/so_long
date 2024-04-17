@@ -4,7 +4,14 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <fcntl.h>
-#define BLOCK 70
+#define BLOCK 64
+
+# define UP_W				119
+# define DOWN_S				115
+# define LEFT_A				97
+# define RIGHT_D			100
+# define EXIT_ESC			65307
+# define EXIT_BUTTON		17
 
 typedef struct s_data
 {
@@ -33,17 +40,42 @@ void *ft_realloc(void *ptr, size_t size)
     return (new_ptr);
 }
 
+int	key_press(int keycode, t_data *p)
+{
+	if (keycode == UP_W && p->play_y != 0)
+		p->play_y -= p->img_y;
+	if (keycode == DOWN_S && p->play_y != 700)
+		p->play_y += p->img_y;
+	else if (keycode == LEFT_A && p->play_x != 0)
+		p->play_x -= p->img_x;
+	else if (keycode == RIGHT_D && p->play_x != 900)
+		p->play_x += p->img_x;
+	else if (keycode == EXIT_ESC)
+		exit(0);
+	else if (keycode == EXIT_BUTTON)
+		exit(0);
+	printf("x: %d y : %d\n", p->play_x, p->play_y);
+	return (0);
+}
+
+int    t(){
+   exit(0);
+}
+
+
+
 int main(int argc, char **argv)
 {
     int fd;
     char *line;
     int height = 0;
     char **map;
-    t_data  img; // 0
-    t_data  img1; // C
-    t_data  img2; // 1
-    t_data  img3; // P
-    t_data  img4; // E
+    t_data  wall; // 1
+    t_data  tile; // 0
+    t_data  collection; // C
+    t_data  player; // P
+    t_data  exit; // E
+    
     t_vars  var;
 
     if (argc == 2)
@@ -124,29 +156,28 @@ int main(int argc, char **argv)
                 }
                 i++;
             }
-
             if (cntC < 1 || cntP != 1 || cntE != 1)
             {
                 printf("error C\n");
                 return (0);
             }
-            img.relative_path = "./test.xpm";
-            img1.relative_path = "./test1.xpm";
-            img2.relative_path = "./test2.xpm";
-            img3.relative_path = "./test3.xpm";
-            img4.relative_path = "./test4.xpm";
+            wall.relative_path = "./img/wall.xpm";
+            exit.relative_path = "./img/exit.xpm";
+            tile.relative_path = "./img/tile.xpm";
+            player.relative_path = "./img/player.xpm";
+            collection.relative_path = "./img/collection.xpm";
             var.mlx = mlx_init();
             var.win = mlx_new_window(var.mlx, baselen * BLOCK, height * BLOCK, "img test");
             //1
-            img.img = mlx_xpm_file_to_image(var.mlx, img.relative_path, &img.img_width, &img.img_height);
+            wall.img = mlx_xpm_file_to_image(var.mlx, wall.relative_path, &wall.img_width, &wall.img_height);
             //0
-            img2.img = mlx_xpm_file_to_image(var.mlx, img2.relative_path, &img2.img_width, &img2.img_height);
+            tile.img = mlx_xpm_file_to_image(var.mlx, tile.relative_path, &tile.img_width, &tile.img_height);
             //P
-            img3.img = mlx_xpm_file_to_image(var.mlx, img3.relative_path, &img3.img_width, &img3.img_height);
+            player.img = mlx_xpm_file_to_image(var.mlx, player.relative_path, &player.img_width, &player.img_height);
             //C
-            img4.img = mlx_xpm_file_to_image(var.mlx, img4.relative_path, &img4.img_width, &img4.img_height);
+            collection.img = mlx_xpm_file_to_image(var.mlx, collection.relative_path, &collection.img_width, &collection.img_height);
             //E
-            img1.img = mlx_xpm_file_to_image(var.mlx, img1.relative_path, &img1.img_width, &img1.img_height);
+            exit.img = mlx_xpm_file_to_image(var.mlx, exit.relative_path, &exit.img_width, &exit.img_height);
             int h = 0;
             int w = 0;
             for (int i = 0; i < height; i++)
@@ -155,19 +186,21 @@ int main(int argc, char **argv)
                 for (int k = 0; k < baselen; k++)
                 {
                     if(map[i][k] == '1')
-                        mlx_put_image_to_window(var.mlx, var.win, img.img, w, h); // 이미지를 화면으로 쏘는 것
+                        mlx_put_image_to_window(var.mlx, var.win, wall.img, w, h); // 이미지를 화면으로 쏘는 것
                     if(map[i][k] == '0')
-                        mlx_put_image_to_window(var.mlx, var.win, img2.img, w, h); // 이미지를 화면으로 쏘는 것
+                        mlx_put_image_to_window(var.mlx, var.win, tile.img, w, h); // 이미지를 화면으로 쏘는 것
                     if(map[i][k] == 'P')
-                        mlx_put_image_to_window(var.mlx, var.win, img3.img, w, h); // 이미지를 화면으로 쏘는 것
+                        mlx_put_image_to_window(var.mlx, var.win, player.img, w, h); // 이미지를 화면으로 쏘는 것
                     if(map[i][k] == 'C')
-                        mlx_put_image_to_window(var.mlx, var.win, img4.img, w, h); // 이미지를 화면으로 쏘는 것
+                        mlx_put_image_to_window(var.mlx, var.win, collection.img, w, h); // 이미지를 화면으로 쏘는 것
                     if(map[i][k] == 'E')
-                        mlx_put_image_to_window(var.mlx, var.win, img1.img, w, h); // 이미지를 화면으로 쏘는 것
+                        mlx_put_image_to_window(var.mlx, var.win, exit.img, w, h); // 이미지를 화면으로 쏘는 것
                     w += BLOCK;
                 }
                 h += BLOCK;
-            } 
+            }
+            mlx_hook(var.win,2,1L<<0, key_press, &var);
+            mlx_hook(var.win, 17, 0, t, &var);
             mlx_loop(var.mlx);
         }
         else
@@ -176,3 +209,4 @@ int main(int argc, char **argv)
     else
         printf("input Err\n");
 }
+

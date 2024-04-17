@@ -73,7 +73,6 @@ typedef struct s_param
 	void	*mlx;
 	void	*win;
 	void	*c;
-	int		fd;
 	int		play_x;
 	int		play_y;
 	int		img_x;
@@ -96,44 +95,38 @@ typedef struct s_param
 // #define RIGHT_D 2
 // #define EXIT_ESC 53
 // #define EXIT_BUTTON 17
+int i = 0;
 int cnt = 0;
 int	key_press(int keycode, t_param *p)
 {
-	
-    printf("%d\n",cnt);
+	i++;
 	if (keycode == UP_W && p->play_y != 0)
-	{
 		p->play_y -= p->img_y;
-		cnt++;
-	}
 	if (keycode == DOWN_S && p->play_y != 700)
-	{
 		p->play_y += p->img_y;
-		cnt++;
-	}
 	else if (keycode == LEFT_A && p->play_x != 0)
-	{
 		p->play_x -= p->img_x;
-		cnt++;
-	}
 	else if (keycode == RIGHT_D && p->play_x != 900)
-	{
 		p->play_x += p->img_x;
-		cnt++;
-	}
 	else if (keycode == EXIT_ESC)
 		exit(0);
 	else if (keycode == EXIT_BUTTON)
 		exit(0);
 	printf("x: %d y : %d\n", p->play_x, p->play_y);
+	cnt++;
 	return (0);
 }
 
 int	draw(t_param *p)
 {
-	mlx_clear_window(p->mlx, p->win);
+	mlx_clear_window(p->mlx, p->win); // window의 모든 요소를 삭제함 
 	mlx_put_image_to_window(p->mlx, p->win, p->c, p->play_x, p->play_y);
+	mlx_string_put(p->mlx, p->win,100,100, 0xFFFFFF, "hihi");
 	return (0);
+}
+
+int    t(){
+   exit(0);
 }
 
 int	main(void)
@@ -142,11 +135,15 @@ int	main(void)
 
 	par.mlx = mlx_init();
 	par.c = mlx_xpm_file_to_image(par.mlx, "test.xpm", &par.img_x, &par.img_y);
-	par.win = mlx_new_window(par.mlx, 1000, 1000, "DrawMap");
+	par.win = mlx_new_window(par.mlx, 1000, 800, "DrawMap");
 	par.play_x = 0;
 	par.play_y = 0;
+	//mlx_string_put(par.mlx, par.win,100,100, 0xFFFFFF, "hihi");
 	mlx_hook(par.win,2,1L<<0, key_press, &par);
 	mlx_loop_hook(par.mlx, &draw, &par);
+	mlx_hook(par.win, 17, 0, t, &par);
 	mlx_loop(par.mlx);
 	return (0);
 }
+
+//gcc keyhook.c -Lmlx -lmlx -lXext -lX11
