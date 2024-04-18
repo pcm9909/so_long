@@ -140,7 +140,6 @@ int	main(void)
 	par.play_y = 0;
 	//mlx_string_put(par.mlx, par.win,100,100, 0xFFFFFF, "hihi");
 	mlx_hook(par.win,2,1L<<0, key_press, &par);
-	mlx_loop_hook(par.mlx, &draw, &par);
 	mlx_hook(par.win, 17, 0, t, &par);
 	mlx_loop(par.mlx);
 	return (0);
