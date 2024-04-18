@@ -8,21 +8,21 @@
 
 
 //for linux
-// # define UP_W				119
-// # define DOWN_S				115
-// # define LEFT_A				97
-// # define RIGHT_D			100
-// # define EXIT_ESC			65307
-// # define EXIT_BUTTON		17
+# define UP_W				119
+# define DOWN_S				115
+# define LEFT_A				97
+# define RIGHT_D			100
+# define EXIT_ESC			65307
+# define EXIT_BUTTON		17
 
 
 //for mac
-#define UP_W 13
-#define DOWN_S 1
-#define LEFT_A 0
-#define RIGHT_D 2
-#define EXIT_ESC 53
-#define EXIT_BUTTON 17
+// #define UP_W 13
+// #define DOWN_S 1
+// #define LEFT_A 0
+// #define RIGHT_D 2
+// #define EXIT_ESC 53
+// #define EXIT_BUTTON 17
 
 typedef struct s_vars
 {
@@ -80,18 +80,23 @@ int key_press(int keycode, t_vars *p)
         p->player_x -= BLOCK;
         mlx_put_image_to_window(p->mlx, p->win, p->player, p->player_x, p->player_y);
     }
-    else if (keycode == RIGHT_D && p->player_x != p->w - BLOCK*2)
-    {
-        mlx_put_image_to_window(p->mlx, p->win, p->tile, p->player_x, p->player_y);
-        p->player_x += BLOCK;
-        mlx_put_image_to_window(p->mlx, p->win, p->player, p->player_x, p->player_y);
+    else if (keycode == RIGHT_D)
+    {   
+        if(p->map[p->player_y / BLOCK][p->player_x / BLOCK] != '1');
+        {
+            mlx_put_image_to_window(p->mlx, p->win, p->tile, p->player_x, p->player_y);
+            p->player_x += BLOCK;
+            mlx_put_image_to_window(p->mlx, p->win, p->player, p->player_x, p->player_y);
+        }
     }
 
     else if (keycode == EXIT_ESC)
         exit(0);
     else if (keycode == EXIT_BUTTON)
         exit(0);
-    printf("x: %d y : %d\n", p->player_x, p->player_y);
+    printf("px: %d py : %d\n", p->player_x, p->player_y);
+    printf("x : %d y : %d\n",p->player_x / BLOCK, p->player_y / BLOCK);
+    printf("map : %c\n", p->map[p->player_y / BLOCK][p->player_x / BLOCK]);
     return (0);
 }
 
@@ -185,6 +190,7 @@ int main(int argc, char **argv)
                 }
                 i++;
             }
+            printf("C=%d P=%d E=%d\n", cntC, cntP, cntE);
             if (cntC < 1 || cntP != 1 || cntE != 1)
             {
                 printf("error C\n");
