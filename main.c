@@ -8,21 +8,21 @@
 
 
 //for linux
-# define UP_W				119
-# define DOWN_S				115
-# define LEFT_A				97
-# define RIGHT_D			100
-# define EXIT_ESC			65307
-# define EXIT_BUTTON		17
+// # define UP_W				119
+// # define DOWN_S				115
+// # define LEFT_A				97
+// # define RIGHT_D			100
+// # define EXIT_ESC			65307
+// # define EXIT_BUTTON		17
 
 
 //for mac
-// #define UP_W 13
-// #define DOWN_S 1
-// #define LEFT_A 0
-// #define RIGHT_D 2
-// #define EXIT_ESC 53
-// #define EXIT_BUTTON 17
+#define UP_W 13
+#define DOWN_S 1
+#define LEFT_A 0
+#define RIGHT_D 2
+#define EXIT_ESC 53
+#define EXIT_BUTTON 17
 
 typedef struct s_vars
 {
@@ -40,6 +40,8 @@ typedef struct s_vars
     int     player_y;
     int     baselen;
     int     height;
+    int     h;
+    int     w;
 }               t_vars;
 
 
@@ -66,7 +68,7 @@ int key_press(int keycode, t_vars *p)
         p->player_y -= BLOCK;
         mlx_put_image_to_window(p->mlx, p->win, p->player, p->player_x, p->player_y);
     }
-    if (keycode == DOWN_S && p->player_y != p->baselen)
+    if (keycode == DOWN_S && p->player_y != p->h - BLOCK*2)
     {
         mlx_put_image_to_window(p->mlx, p->win, p->tile, p->player_x, p->player_y);
         p->player_y += BLOCK;
@@ -78,7 +80,7 @@ int key_press(int keycode, t_vars *p)
         p->player_x -= BLOCK;
         mlx_put_image_to_window(p->mlx, p->win, p->player, p->player_x, p->player_y);
     }
-    else if (keycode == RIGHT_D && p->player_x != p->height)
+    else if (keycode == RIGHT_D && p->player_x != p->w - BLOCK*2)
     {
         mlx_put_image_to_window(p->mlx, p->win, p->tile, p->player_x, p->player_y);
         p->player_x += BLOCK;
@@ -103,6 +105,7 @@ int main(int argc, char **argv)
     int fd;
     char *line;
     t_vars  var;
+    var.height = 0; 
 
     if (argc == 2)
     {
@@ -199,32 +202,32 @@ int main(int argc, char **argv)
             var.collection = mlx_xpm_file_to_image(var.mlx, "./img/collection.xpm", &var.img_width, &var.img_height);
             //E
             var.goal = mlx_xpm_file_to_image(var.mlx, "./img/exit.xpm", &var.img_width, &var.img_height);
-            int h = 0;
-            int w = 0;
 
+            var.h = 0;
             for (int i = 0; i < var.height; i++)
             {   
-                w = 0;
+                var.w = 0;
                 for (int k = 0; k < var.baselen; k++)
                 {
                     if(var.map[i][k] == '1')
-                        mlx_put_image_to_window(var.mlx, var.win, var.wall, w, h); // 이미지를 화면으로 쏘는 것
+                        mlx_put_image_to_window(var.mlx, var.win, var.wall, var.w, var.h); // 이미지를 화면으로 쏘는 것
                     if(var.map[i][k] == '0')
-                        mlx_put_image_to_window(var.mlx, var.win, var.tile, w, h); // 이미지를 화면으로 쏘는 것
+                        mlx_put_image_to_window(var.mlx, var.win, var.tile, var.w, var.h); // 이미지를 화면으로 쏘는 것
                     if(var.map[i][k] == 'P')
                     {
-                        mlx_put_image_to_window(var.mlx, var.win, var.player, w, h); // 이미지를 화면으로 쏘는 것
-                        var.player_x = w;
-                        var.player_y = h;
+                        mlx_put_image_to_window(var.mlx, var.win, var.player, var.w, var.h); // 이미지를 화면으로 쏘는 것
+                        var.player_x = var.w;
+                        var.player_y = var.h;
                     }
                     if(var.map[i][k] == 'C')
-                        mlx_put_image_to_window(var.mlx, var.win, var.collection, w, h); // 이미지를 화면으로 쏘는 것
+                        mlx_put_image_to_window(var.mlx, var.win, var.collection, var.w, var.h); // 이미지를 화면으로 쏘는 것
                     if(var.map[i][k] == 'E')
-                        mlx_put_image_to_window(var.mlx, var.win, var.goal, w, h); // 이미지를 화면으로 쏘는 것
-                    w += BLOCK;
+                        mlx_put_image_to_window(var.mlx, var.win, var.goal, var.w, var.h); // 이미지를 화면으로 쏘는 것
+                    var.w += BLOCK;
                 }
-                h += BLOCK;
+                var.h += BLOCK;
             }
+            printf("%d %d\n", var.w, var.h);
             mlx_hook(var.win,2,1L<<0, key_press, &var);
             mlx_hook(var.win, 17, 0, t, &var);
             mlx_loop(var.mlx);
