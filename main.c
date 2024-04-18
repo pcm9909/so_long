@@ -62,37 +62,43 @@ void *ft_realloc(void *ptr, size_t size)
 int key_press(int keycode, t_vars *p)
 {
     printf("keycode : %d\n", keycode);
-    if (keycode == UP_W && p->player_y != BLOCK)
+    if (keycode == UP_W)
     {
-        mlx_put_image_to_window(p->mlx, p->win, p->tile, p->player_x, p->player_y);
-        p->player_y -= BLOCK;
-        mlx_put_image_to_window(p->mlx, p->win, p->player, p->player_x, p->player_y);
+        if(p->map[p->player_y / BLOCK - 1][p->player_x / BLOCK] != '1')
+        {
+            mlx_put_image_to_window(p->mlx, p->win, p->tile, p->player_x, p->player_y);
+            p->player_y -= BLOCK;
+            mlx_put_image_to_window(p->mlx, p->win, p->player, p->player_x, p->player_y);
+        }
     }
-    if (keycode == DOWN_S && p->player_y != p->h - BLOCK*2)
-    {
-        mlx_put_image_to_window(p->mlx, p->win, p->tile, p->player_x, p->player_y);
-        p->player_y += BLOCK;
-        mlx_put_image_to_window(p->mlx, p->win, p->player, p->player_x, p->player_y);
+    if (keycode == DOWN_S)
+    {   
+        if (p->map[p->player_y / BLOCK + 1][p->player_x / BLOCK] != '1')
+        {
+            mlx_put_image_to_window(p->mlx, p->win, p->tile, p->player_x, p->player_y);
+            p->player_y += BLOCK;
+            mlx_put_image_to_window(p->mlx, p->win, p->player, p->player_x, p->player_y);
+        }
     }
-    else if (keycode == LEFT_A && p->player_x != BLOCK)
+    else if (keycode == LEFT_A)
     {
-        mlx_put_image_to_window(p->mlx, p->win, p->tile, p->player_x, p->player_y);
-        p->player_x -= BLOCK;
-        mlx_put_image_to_window(p->mlx, p->win, p->player, p->player_x, p->player_y);
+        if(p->map[p->player_y / BLOCK][p->player_x / BLOCK - 1] != '1')
+        {
+            mlx_put_image_to_window(p->mlx, p->win, p->tile, p->player_x, p->player_y);
+            p->player_x -= BLOCK;
+            mlx_put_image_to_window(p->mlx, p->win, p->player, p->player_x, p->player_y);
+        }
     }
     else if (keycode == RIGHT_D)
     {   
-        if(p->map[p->player_y / BLOCK][p->player_x / BLOCK] != '1');
+        if(p->map[p->player_y / BLOCK][p->player_x / BLOCK + 1] != '1')
         {
             mlx_put_image_to_window(p->mlx, p->win, p->tile, p->player_x, p->player_y);
             p->player_x += BLOCK;
             mlx_put_image_to_window(p->mlx, p->win, p->player, p->player_x, p->player_y);
         }
     }
-
     else if (keycode == EXIT_ESC)
-        exit(0);
-    else if (keycode == EXIT_BUTTON)
         exit(0);
     printf("px: %d py : %d\n", p->player_x, p->player_y);
     printf("x : %d y : %d\n",p->player_x / BLOCK, p->player_y / BLOCK);
