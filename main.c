@@ -8,21 +8,21 @@
 
 
 //for linux
-// # define UP_W				119
-// # define DOWN_S				115
-// # define LEFT_A				97
-// # define RIGHT_D			100
-// # define EXIT_ESC			65307
-// # define EXIT_BUTTON		17
+# define UP_W				119
+# define DOWN_S				115
+# define LEFT_A				97
+# define RIGHT_D			100
+# define EXIT_ESC			65307
+# define EXIT_BUTTON		17
 
 
 //for mac
-#define UP_W 13
-#define DOWN_S 1
-#define LEFT_A 0
-#define RIGHT_D 2
-#define EXIT_ESC 53
-#define EXIT_BUTTON 17
+// #define UP_W 13
+// #define DOWN_S 1
+// #define LEFT_A 0
+// #define RIGHT_D 2
+// #define EXIT_ESC 53
+// #define EXIT_BUTTON 17
 
 typedef struct s_vars
 {
@@ -38,6 +38,8 @@ typedef struct s_vars
     char    **map;
     int     player_x;
     int     player_y;
+    int     baselen;
+    int     height;
 }               t_vars;
 
 
@@ -64,7 +66,7 @@ int key_press(int keycode, t_vars *p)
         p->player_y -= BLOCK;
         mlx_put_image_to_window(p->mlx, p->win, p->player, p->player_x, p->player_y);
     }
-    if (keycode == DOWN_S && p->player_y != 700 - BLOCK)
+    if (keycode == DOWN_S && p->player_y != p->baselen)
     {
         mlx_put_image_to_window(p->mlx, p->win, p->tile, p->player_x, p->player_y);
         p->player_y += BLOCK;
@@ -76,7 +78,7 @@ int key_press(int keycode, t_vars *p)
         p->player_x -= BLOCK;
         mlx_put_image_to_window(p->mlx, p->win, p->player, p->player_x, p->player_y);
     }
-    else if (keycode == RIGHT_D && p->player_x != 576)
+    else if (keycode == RIGHT_D && p->player_x != p->height)
     {
         mlx_put_image_to_window(p->mlx, p->win, p->tile, p->player_x, p->player_y);
         p->player_x += BLOCK;
@@ -91,17 +93,15 @@ int key_press(int keycode, t_vars *p)
     return (0);
 }
 
-int    t(){
+int    t()
+{
    exit(0);
 }
-
-
 
 int main(int argc, char **argv)
 {
     int fd;
     char *line;
-    int height = 0;
     t_vars  var;
 
     if (argc == 2)
@@ -112,25 +112,25 @@ int main(int argc, char **argv)
             var.map = (char **)malloc(sizeof(char *));
             while ((line = get_next_line(fd)) > 0) //.ber파일을 이중배열로 만듬
             {
-                var.map[height] = ft_strdup(line);
+                var.map[var.height] = ft_strdup(line);
                 free(line);
-                height++;
-                var.map = (char **)ft_realloc(var.map, (height + 1) * sizeof(char *));
+                var.height++;
+                var.map = (char **)ft_realloc(var.map, (var.height + 1) * sizeof(char *));
             }
             // map이 제대로 적성되었는지 검증 1. x축이 잘 들어왔는가? map이 3줄 이상인가
-            if (height < 3)
+            if (var.height < 3)
                 printf("error height\n");
-            int baselen = ft_strlen(var.map[0]) - 1;
+            var.baselen = ft_strlen(var.map[0]) - 1;
             int j = 1;
-            printf("%d %d\n", height, baselen);
-            while (j < height)
+            printf("%d %d\n", var.height, var.baselen);
+            while (j < var.height)
             {
                 printf("%d\n", ft_strlen(var.map[j]) - 1);
-                if (baselen != ft_strlen(var.map[j]) - 1)
+                if (var.baselen != ft_strlen(var.map[j]) - 1)
                 {
-                    if (j == height - 1)
+                    if (j == var.height - 1)
                     {
-                        if (baselen == ft_strlen(var.map[j]))
+                        if (var.baselen == ft_strlen(var.map[j]))
                             break;
                     }
                     printf("error base\n");
@@ -140,9 +140,9 @@ int main(int argc, char **argv)
             }
             // map이 제대로 적성되었는지 검증 2. y축이 잘 들어왔는가? map이 3줄 이상인가
             int i = 0;
-            while (i < baselen)
+            while (i < var.baselen)
             {
-                if (var.map[0][i] != '1' || var.map[height - 1][i] != '1')
+                if (var.map[0][i] != '1' || var.map[var.height - 1][i] != '1')
                 {
                     printf("error 1\n");
                     break;
@@ -151,9 +151,9 @@ int main(int argc, char **argv)
             }
             //check 테두리
             i = 0;
-            while (i < height)
+            while (i < var.height)
             {
-                if (var.map[i][0] != '1' || var.map[i][baselen - 1] != '1')
+                if (var.map[i][0] != '1' || var.map[i][var.baselen - 1] != '1')
                 {
                     printf("error 2\n");
                     break;
@@ -162,10 +162,10 @@ int main(int argc, char **argv)
             }
             int cntC = 0, cntP = 0, cntE = 0;
             i = 1;
-            while (i < height - 1)
+            while (i < var.height - 1)
             {
                 int j = 1;
-                while (j < baselen - 1)
+                while (j < var.baselen - 1)
                 {
                     if (var.map[i][j] == 'C')
                         cntC++;
@@ -188,7 +188,7 @@ int main(int argc, char **argv)
                 return (0);
             }
             var.mlx = mlx_init();
-            var.win = mlx_new_window(var.mlx, baselen * BLOCK, height * BLOCK, "img test");
+            var.win = mlx_new_window(var.mlx, var.baselen * BLOCK, var.height * BLOCK, "img test");
             //1
             var.wall = mlx_xpm_file_to_image(var.mlx, "./img/wall.xpm", & var.img_width, &var.img_height);
             //0
@@ -202,10 +202,10 @@ int main(int argc, char **argv)
             int h = 0;
             int w = 0;
 
-            for (int i = 0; i < height; i++)
+            for (int i = 0; i < var.height; i++)
             {   
                 w = 0;
-                for (int k = 0; k < baselen; k++)
+                for (int k = 0; k < var.baselen; k++)
                 {
                     if(var.map[i][k] == '1')
                         mlx_put_image_to_window(var.mlx, var.win, var.wall, w, h); // 이미지를 화면으로 쏘는 것
