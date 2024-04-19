@@ -60,16 +60,16 @@ BNS_OBJS = $(BNS_SRCS:.c=.o)
 all: $(NAME)
 
 $(NAME): $(OBJS) $(HEADER)
-	ar rcs $(NAME) $(OBJS)
+	@ar rcs $(NAME) $(OBJS)
 
 bonus:	$(OBJS) $(BNS_OBJS) $(HEADER)
-	ar rcs $(NAME) $(OBJS) $(BNS_OBJS)
+	@ar rcs $(NAME) $(OBJS) $(BNS_OBJS)
 
 clean:
-	$(RM) $(OBJS) $(BNS_OBJS)
+	@$(RM) $(OBJS) $(BNS_OBJS)
 
 fclean: clean
-	$(RM) $(NAME) $(OBJS) $(BNS_OBJS)
+	@$(RM) $(NAME) $(OBJS) $(BNS_OBJS)
 
 re: fclean all
 
