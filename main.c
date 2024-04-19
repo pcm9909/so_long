@@ -174,25 +174,14 @@ int main(int argc, char **argv)
             // map이 제대로 적성되었는지 검증 1. x축이 잘 들어왔는가? map이 3줄 이상인가
             if (var.height < 3)
                 printf("The map is not valid\n");
-            var.baselen = ft_strlen(var.map[0]) - 1;
+            var.baselen = ft_strlen(var.map[0]);
             int j = 1;
             printf("%d %d\n", var.height, var.baselen);
             while (j < var.height)
             {
-                printf("%d\n", ft_strlen(var.map[j]) - 1);
-                if (var.baselen != ft_strlen(var.map[j]) - 1)
-                {
-                    printf("%d",j);
-                    if (j == var.height - 1)
-                    {
-                        printf("last in\n");
-                        printf("%d %d \n", var.baselen, ft_strlen(var.map[j]));
-                        if (var.baselen == ft_strlen(var.map[j]))
-                            break;
-                    }
+                printf("%d\n", ft_strlen(var.map[j]));
+                if (var.baselen != ft_strlen(var.map[j]))
                     exit_error("The map is not valid\n");
-                    break;
-                }
                 j++;
             }
             // map이 제대로 적성되었는지 검증 2. y축이 잘 들어왔는가? map이 3줄 이상인가

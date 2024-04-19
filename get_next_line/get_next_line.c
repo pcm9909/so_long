@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   get_next_line.c                                    :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: chunpark <marvin@42.fr>                    +#+  +:+       +#+        */
+/*   By: chunpark <chunpark@student.42gyeongsan.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/11 23:41:18 by chunpark          #+#    #+#             */
-/*   Updated: 2024/03/20 11:37:49 by chunpark         ###   ########.fr       */
+/*   Updated: 2024/04/19 21:46:54 by chunpark         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,7 +17,7 @@ char	*handle_newline(char **str, int i)
 	char	*line;
 	char	*tmp;
 
-	line = gnl_substr(*str, 0, i + 1);
+	line = gnl_substr(*str, 0, i);
 	tmp = gnl_strdup(&(*str)[i + 1]);
 	free(*str);
 	*str = tmp;
