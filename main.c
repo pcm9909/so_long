@@ -8,21 +8,21 @@
 
 
 //for linux
-# define UP_W				119
-# define DOWN_S				115
-# define LEFT_A				97
-# define RIGHT_D			100
-# define EXIT_ESC			65307
-# define EXIT_BUTTON		17
+// # define UP_W				119
+// # define DOWN_S				115
+// # define LEFT_A				97
+// # define RIGHT_D			100
+// # define EXIT_ESC			65307
+// # define EXIT_BUTTON		17
 
 
 //for mac
-// #define UP_W 13
-// #define DOWN_S 1
-// #define LEFT_A 0
-// #define RIGHT_D 2
-// #define EXIT_ESC 53
-// #define EXIT_BUTTON 17
+#define UP_W 13
+#define DOWN_S 1
+#define LEFT_A 0
+#define RIGHT_D 2
+#define EXIT_ESC 53
+#define EXIT_BUTTON 17
 
 typedef struct s_vars
 {
@@ -31,7 +31,10 @@ typedef struct s_vars
     void	*wall;
     void    *tile;
     void    *collection;
-    void    *player;
+    void    *player_front;
+    void    *player_back;
+    void    *player_right;
+    void    *player_left;
     void    *goal;
     void    *goal1; 
 	int		img_width;
@@ -48,8 +51,6 @@ typedef struct s_vars
     int     cntC;
     int     move;
 }               t_vars;
-
-
 
 void *ft_realloc(void *ptr, size_t size)
 {
@@ -78,7 +79,7 @@ int key_press(int keycode, t_vars *p)
         {
             mlx_put_image_to_window(p->mlx, p->win, p->tile, p->player_x, p->player_y);
             p->player_y -= BLOCK;
-            mlx_put_image_to_window(p->mlx, p->win, p->player, p->player_x, p->player_y);
+            mlx_put_image_to_window(p->mlx, p->win, p->player_back, p->player_x, p->player_y);
             p->move++;
             
         }
@@ -89,7 +90,7 @@ int key_press(int keycode, t_vars *p)
         {
             mlx_put_image_to_window(p->mlx, p->win, p->tile, p->player_x, p->player_y);
             p->player_y += BLOCK;
-            mlx_put_image_to_window(p->mlx, p->win, p->player, p->player_x, p->player_y);
+            mlx_put_image_to_window(p->mlx, p->win, p->player_front, p->player_x, p->player_y);
             p->move++;
            
         }
@@ -100,7 +101,7 @@ int key_press(int keycode, t_vars *p)
         {
             mlx_put_image_to_window(p->mlx, p->win, p->tile, p->player_x, p->player_y);
             p->player_x -= BLOCK;
-            mlx_put_image_to_window(p->mlx, p->win, p->player, p->player_x, p->player_y);
+            mlx_put_image_to_window(p->mlx, p->win, p->player_left, p->player_x, p->player_y);
             p->move++;
             
         }
@@ -111,7 +112,7 @@ int key_press(int keycode, t_vars *p)
         {
             mlx_put_image_to_window(p->mlx, p->win, p->tile, p->player_x, p->player_y);
             p->player_x += BLOCK;
-            mlx_put_image_to_window(p->mlx, p->win, p->player, p->player_x, p->player_y);
+            mlx_put_image_to_window(p->mlx, p->win, p->player_right, p->player_x, p->player_y);
             p->move++;
             
         }
@@ -236,6 +237,7 @@ int main(int argc, char **argv)
                 exit_error("The map is not valid\n");
                 return (0);
             }
+
             var.mlx = mlx_init();
             var.win = mlx_new_window(var.mlx, var.baselen * BLOCK, var.height * BLOCK, "img test");
             //1
@@ -243,7 +245,10 @@ int main(int argc, char **argv)
             //0
             var.tile = mlx_xpm_file_to_image(var.mlx, "./img/tile.xpm", &var.img_width, &var.img_height);
             //P
-            var.player = mlx_xpm_file_to_image(var.mlx, "./img/player.xpm", &var.img_width, &var.img_height);
+            var.player_front = mlx_xpm_file_to_image(var.mlx, "./img/player_front.xpm", &var.img_width, &var.img_height);
+            var.player_back = mlx_xpm_file_to_image(var.mlx, "./img/player_back.xpm", &var.img_width, &var.img_height);
+            var.player_right = mlx_xpm_file_to_image(var.mlx, "./img/player_right.xpm", &var.img_width, &var.img_height);
+            var.player_left = mlx_xpm_file_to_image(var.mlx, "./img/player_left.xpm", &var.img_width, &var.img_height);
             //C
             var.collection = mlx_xpm_file_to_image(var.mlx, "./img/collection.xpm", &var.img_width, &var.img_height);
             //E
@@ -264,7 +269,7 @@ int main(int argc, char **argv)
                     {
                         var.player_x = var.w;
                         var.player_y = var.h;
-                        mlx_put_image_to_window(var.mlx, var.win, var.player, var.w, var.h); // 이미지를 화면으로 쏘는 것
+                        mlx_put_image_to_window(var.mlx, var.win, var.player_front, var.w, var.h); // 이미지를 화면으로 쏘는 것
                     }
                     if(var.map[i][k] == 'C')
                         mlx_put_image_to_window(var.mlx, var.win, var.collection, var.w, var.h); // 이미지를 화면으로 쏘는 것
