@@ -8,21 +8,21 @@
 
 
 //for linux
-// # define UP_W				119
-// # define DOWN_S				115
-// # define LEFT_A				97
-// # define RIGHT_D			100
-// # define EXIT_ESC			65307
-// # define EXIT_BUTTON		17
+# define UP_W				119
+# define DOWN_S				115
+# define LEFT_A				97
+# define RIGHT_D			100
+# define EXIT_ESC			65307
+# define EXIT_BUTTON		17
 
 
 //for mac
-#define UP_W 13
-#define DOWN_S 1
-#define LEFT_A 0
-#define RIGHT_D 2
-#define EXIT_ESC 53
-#define EXIT_BUTTON 17
+// #define UP_W 13
+// #define DOWN_S 1
+// #define LEFT_A 0
+// #define RIGHT_D 2
+// #define EXIT_ESC 53
+// #define EXIT_BUTTON 17
 
 typedef struct s_vars
 {
@@ -40,6 +40,7 @@ typedef struct s_vars
 	int		img_width;
 	int		img_height;
     char    **map;
+    char    **dfs_maps;
     int     player_x;
     int     player_y;
     int     exit_x;
@@ -67,7 +68,6 @@ void *ft_realloc(void *ptr, size_t size)
 
 int key_press(int keycode, t_vars *p)
 {
-    printf("keycode : %d\n", keycode);
     mlx_put_image_to_window(p->mlx, p->win, p->wall, 0, 0);
     mlx_string_put(p->mlx, p->win,10,20, 0xFFFFFF,ft_itoa(p->move));
     if (p->cntC > 0)
@@ -141,6 +141,22 @@ void    exit_error(char *str)
     exit(1);
 }
 
+void **make_dfs_map(t_vars p)
+{
+    int i;
+    int j;
+
+    i = 0;
+    p.dfs_maps = (char **)malloc(sizeof(char *) * sizeof(p.height));
+    while(i < p.height)
+    {
+        p.dfs_maps[i] = malloc(sizeof(p.baselen));
+        ft_memcpy(p.dfs_maps, p.map, sizeof(p.baselen));
+        i++;
+        printf("%s\n", p.dfs_maps[i]);
+    }
+}
+
 int main(int argc, char **argv)
 {
     int fd;
@@ -194,6 +210,8 @@ int main(int argc, char **argv)
             var.cntC = 0;
             int cntP = 0;
             int cntE = 0;
+
+            make_dfs_map(var);
 
             i = 1;
             while (i < var.height - 1)
