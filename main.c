@@ -72,7 +72,6 @@ int key_press(int keycode, t_vars *p)
     mlx_string_put(p->mlx, p->win,10,20, 0xFFFFFF,ft_itoa(p->move));
     if (p->cntC > 0)
         p->map[p->exit_y / BLOCK][p->exit_x / BLOCK] = '1';
-
     if (keycode == UP_W)
     {
         if(p->map[p->player_y / BLOCK - 1][p->player_x / BLOCK] != '1')
@@ -81,7 +80,6 @@ int key_press(int keycode, t_vars *p)
             p->player_y -= BLOCK;
             mlx_put_image_to_window(p->mlx, p->win, p->player_back, p->player_x, p->player_y);
             p->move++;
-            
         }
     }
     if (keycode == DOWN_S)
@@ -92,7 +90,6 @@ int key_press(int keycode, t_vars *p)
             p->player_y += BLOCK;
             mlx_put_image_to_window(p->mlx, p->win, p->player_front, p->player_x, p->player_y);
             p->move++;
-           
         }
     }
     else if (keycode == LEFT_A)
@@ -102,8 +99,7 @@ int key_press(int keycode, t_vars *p)
             mlx_put_image_to_window(p->mlx, p->win, p->tile, p->player_x, p->player_y);
             p->player_x -= BLOCK;
             mlx_put_image_to_window(p->mlx, p->win, p->player_left, p->player_x, p->player_y);
-            p->move++;
-            
+            p->move++; 
         }
     }
     else if (keycode == RIGHT_D)
@@ -122,7 +118,6 @@ int key_press(int keycode, t_vars *p)
     if(p->map[p->player_y / BLOCK][p->player_x / BLOCK] == 'C')
     {
         p->cntC--;
-        printf("cntC = %d\n", p->cntC);
         p->map[p->player_y / BLOCK][p->player_x / BLOCK] = '0';
     }
     if (p->cntC == 0)
@@ -132,9 +127,6 @@ int key_press(int keycode, t_vars *p)
     }
     if(p->cntC == 0 && p->map[p->player_y / BLOCK][p->player_x / BLOCK] == 'E')
         exit(0);
-    printf("px: %d py : %d\n", p->player_x, p->player_y);
-    printf("x : %d y : %d\n",p->player_x / BLOCK, p->player_y / BLOCK);
-    printf("map : %c\n", p->map[p->player_y / BLOCK][p->player_x / BLOCK]);
     return (0);
 }
 
@@ -159,13 +151,13 @@ int main(int argc, char **argv)
 
     if (argc == 2)
     {
-        if (ft_strncmp(ft_strchr(argv[1], '.'), ".ber", 4) == 0) // .ber파일인지 검증
+        if (ft_strncmp(ft_strchr(argv[1], '.'), ".ber\0", 5) == 0)
         {
             fd = open(argv[1], O_RDONLY);
             if (fd == -1) 
                 exit_error("File does not exist\n");
             var.map = (char **)malloc(sizeof(char *));
-            while ((line = get_next_line(fd)) > 0) //.ber파일을 이중배열로 만듬
+            while ((line = get_next_line(fd)) > 0)
             {
                 var.map[var.height] = ft_strdup(line);
                 free(line);
@@ -174,13 +166,11 @@ int main(int argc, char **argv)
             }
             // map이 제대로 적성되었는지 검증 1. x축이 잘 들어왔는가? map이 3줄 이상인가
             if (var.height < 3)
-                printf("The map is not valid\n");
+                exit_error("The map is not valid\n");
             var.baselen = ft_strlen(var.map[0]);
             int j = 1;
-            printf("%d %d\n", var.height, var.baselen);
             while (j < var.height)
             {
-                printf("%d\n", ft_strlen(var.map[j]));
                 if (var.baselen != ft_strlen(var.map[j]))
                     exit_error("The map is not valid\n");
                 j++;
@@ -190,10 +180,7 @@ int main(int argc, char **argv)
             while (i < var.baselen)
             {
                 if (var.map[0][i] != '1' || var.map[var.height - 1][i] != '1')
-                {
                     exit_error("The map is not valid\n");
-                    break;
-                }
                 i++;
             }
             //check 테두리
@@ -201,15 +188,13 @@ int main(int argc, char **argv)
             while (i < var.height)
             {
                 if (var.map[i][0] != '1' || var.map[i][var.baselen - 1] != '1')
-                {
                     exit_error("The map is not valid\n");
-                    break;
-                }
                 i++;
             }
             var.cntC = 0;
             int cntP = 0;
             int cntE = 0;
+
             i = 1;
             while (i < var.height - 1)
             {
@@ -223,38 +208,26 @@ int main(int argc, char **argv)
                     else if (var.map[i][j] == 'E')
                         cntE++;
                     else if (var.map[i][j] != '1' && var.map[i][j] != '0')
-                    {
-                        printf("The map is not valid\n");
-                        return 0;
-                    }
+                        exit_error("The map is not valid\n");
                     j++;
                 }
                 i++;
             }
-            printf("C=%d P=%d E=%d\n", var.cntC, cntP, cntE);
             if (var.cntC < 1 || cntP != 1 || cntE != 1)
-            {
                 exit_error("The map is not valid\n");
-                return (0);
-            }
 
             var.mlx = mlx_init();
             var.win = mlx_new_window(var.mlx, var.baselen * BLOCK, var.height * BLOCK, "img test");
-            //1
             var.wall = mlx_xpm_file_to_image(var.mlx, "./img/wall.xpm", & var.img_width, &var.img_height);
-            //0
             var.tile = mlx_xpm_file_to_image(var.mlx, "./img/tile.xpm", &var.img_width, &var.img_height);
-            //P
             var.player_front = mlx_xpm_file_to_image(var.mlx, "./img/player_front.xpm", &var.img_width, &var.img_height);
             var.player_back = mlx_xpm_file_to_image(var.mlx, "./img/player_back.xpm", &var.img_width, &var.img_height);
             var.player_right = mlx_xpm_file_to_image(var.mlx, "./img/player_right.xpm", &var.img_width, &var.img_height);
             var.player_left = mlx_xpm_file_to_image(var.mlx, "./img/player_left.xpm", &var.img_width, &var.img_height);
-            //C
             var.collection = mlx_xpm_file_to_image(var.mlx, "./img/collection.xpm", &var.img_width, &var.img_height);
-            //E
             var.goal = mlx_xpm_file_to_image(var.mlx, "./img/exit.xpm", &var.img_width, &var.img_height);
-            //E1
             var.goal1 = mlx_xpm_file_to_image(var.mlx, "./img/exit1.xpm", &var.img_width, &var.img_height);
+            
             var.h = 0;
             for (int i = 0; i < var.height; i++)
             {   
@@ -262,36 +235,35 @@ int main(int argc, char **argv)
                 for (int k = 0; k < var.baselen; k++)
                 {
                     if(var.map[i][k] == '1')
-                        mlx_put_image_to_window(var.mlx, var.win, var.wall, var.w, var.h); // 이미지를 화면으로 쏘는 것
+                        mlx_put_image_to_window(var.mlx, var.win, var.wall, var.w, var.h); 
                     if(var.map[i][k] == '0')
-                        mlx_put_image_to_window(var.mlx, var.win, var.tile, var.w, var.h); // 이미지를 화면으로 쏘는 것
+                        mlx_put_image_to_window(var.mlx, var.win, var.tile, var.w, var.h); 
                     if(var.map[i][k] == 'P')
                     {
                         var.player_x = var.w;
                         var.player_y = var.h;
-                        mlx_put_image_to_window(var.mlx, var.win, var.player_front, var.w, var.h); // 이미지를 화면으로 쏘는 것
+                        mlx_put_image_to_window(var.mlx, var.win, var.player_front, var.w, var.h);
                     }
                     if(var.map[i][k] == 'C')
-                        mlx_put_image_to_window(var.mlx, var.win, var.collection, var.w, var.h); // 이미지를 화면으로 쏘는 것
+                        mlx_put_image_to_window(var.mlx, var.win, var.collection, var.w, var.h);
                     if(var.map[i][k] == 'E')
                     {
                         var.exit_x = var.w;
                         var.exit_y = var.h;
-                        mlx_put_image_to_window(var.mlx, var.win, var.goal, var.w, var.h); // 이미지를 화면으로 쏘는 것
+                        mlx_put_image_to_window(var.mlx, var.win, var.goal, var.w, var.h);
                     }
                     var.w += BLOCK;
                 }
                 var.h += BLOCK;
             }
-            printf("%d %d\n", var.w, var.h);
+
             mlx_hook(var.win,2,1L<<0, key_press, &var);
             mlx_hook(var.win, 17, 0, t, &var);
             mlx_loop(var.mlx);
         }
         else
-            exit_error("The map is not valid\n");
+            exit_error("Please enter the [.ber] file\n");
     }
     else
         exit_error("The number of inputs is not correct\n");
 }
-
