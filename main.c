@@ -317,11 +317,10 @@ int main(int argc, char **argv)
             int b;
             map1 = make_dfs_map(var);
             map2 = make_dfs_map(var);
-            printf("%c\n", var.map[var.player_y / BLOCK][var.player_x / BLOCK]);
-            a = dfs(map1, var.player_x / BLOCK, var.player_y / BLOCK, 'E');
-            b = dfs(map2, var.player_x / BLOCK, var.player_y / BLOCK, 'C');
-            printf("E = %d dfs = %d\n", cntE ,a);
-            printf("C = %d dfs = %d\n",var.cntC ,b);
+            if (dfs(map1, var.player_x / BLOCK, var.player_y / BLOCK, 'E') != 1)
+                exit_error("The map is not valid\n");
+            if (dfs(map2, var.player_x / BLOCK, var.player_y / BLOCK, 'C') != var.cntC)
+                exit_error("The map is not valid\n");
             mlx_hook(var.win,2,1L<<0, key_press, &var);
             mlx_hook(var.win, 17, 0, t, &var);
             mlx_loop(var.mlx);
