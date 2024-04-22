@@ -8,21 +8,21 @@
 
 
 //for linux
-# define UP_W				119
-# define DOWN_S				115
-# define LEFT_A				97
-# define RIGHT_D			100
-# define EXIT_ESC			65307
-# define EXIT_BUTTON		17
+// # define UP_W				119
+// # define DOWN_S				115
+// # define LEFT_A				97
+// # define RIGHT_D			100
+// # define EXIT_ESC			65307
+// # define EXIT_BUTTON		17
 
 
 //for mac
-// #define UP_W 13
-// #define DOWN_S 1
-// #define LEFT_A 0
-// #define RIGHT_D 2
-// #define EXIT_ESC 53
-// #define EXIT_BUTTON 17
+#define UP_W 13
+#define DOWN_S 1
+#define LEFT_A 0
+#define RIGHT_D 2
+#define EXIT_ESC 53
+#define EXIT_BUTTON 17
 
 typedef struct s_vars
 {
@@ -51,6 +51,7 @@ typedef struct s_vars
     int     w;
     int     cntC;
     int     move;
+    int     step;
 }               t_vars;
 
 void *ft_realloc(void *ptr, size_t size)
@@ -110,7 +111,6 @@ int key_press(int keycode, t_vars *p)
             p->player_x += BLOCK;
             mlx_put_image_to_window(p->mlx, p->win, p->player_right, p->player_x, p->player_y);
             p->move++;
-            
         }
     }
     else if (keycode == EXIT_ESC)
@@ -141,20 +141,50 @@ void    exit_error(char *str)
     exit(1);
 }
 
-void **make_dfs_map(t_vars p)
+
+
+char **make_dfs_map(t_vars p)
 {
     int i;
-    int j;
+    char **dfs_maps;
 
     i = 0;
-    p.dfs_maps = (char **)malloc(sizeof(char *) * sizeof(p.height));
-    while(i < p.height)
+    dfs_maps = (char **)malloc(sizeof(char *) * p.height);
+    while (i < p.height)
     {
-        p.dfs_maps[i] = malloc(sizeof(p.baselen));
-        ft_memcpy(p.dfs_maps, p.map, sizeof(p.baselen));
+        dfs_maps[i] = malloc(p.baselen + 1);
+        ft_memcpy(dfs_maps[i], p.map[i], p.baselen + 1);
         i++;
-        printf("%s\n", p.dfs_maps[i]);
     }
+    return (dfs_maps);
+}
+
+int dfs(char **map, int x, int y, char find)
+{
+    printf("(x = %d y = %d) val = %c\n", x, y, map[y][x]);
+    int cnt;
+
+    if (map[y][x] == '1')
+    {
+        map[y][x] = 'V';
+        return 0;
+    }
+    if(map[y][x] != 'V')
+    {
+        if (map[y][x] == find)
+        {
+            map[y][x] = 'V';
+            return 1;
+        }
+        map[y][x] = 'V';
+        cnt = 0;
+        cnt += dfs(map, x - 1, y, find);
+        cnt += dfs(map, x, y + 1, find);
+        cnt += dfs(map, x + 1, y, find);
+        cnt += dfs(map, x, y - 1, find);
+        return cnt;
+    }
+    return 0;
 }
 
 int main(int argc, char **argv)
@@ -211,8 +241,6 @@ int main(int argc, char **argv)
             int cntP = 0;
             int cntE = 0;
 
-            make_dfs_map(var);
-
             i = 1;
             while (i < var.height - 1)
             {
@@ -233,6 +261,8 @@ int main(int argc, char **argv)
             }
             if (var.cntC < 1 || cntP != 1 || cntE != 1)
                 exit_error("The map is not valid\n");
+
+           
 
             var.mlx = mlx_init();
             var.win = mlx_new_window(var.mlx, var.baselen * BLOCK, var.height * BLOCK, "img test");
@@ -274,7 +304,17 @@ int main(int argc, char **argv)
                 }
                 var.h += BLOCK;
             }
-
+            char **map1;
+            char **map2;
+            int a;
+            int b;
+            map1 = make_dfs_map(var);
+            map2 = make_dfs_map(var);
+            printf("%c\n", var.map[var.player_y / BLOCK][var.player_x / BLOCK]);
+            a = dfs(map1, var.player_x / BLOCK, var.player_y / BLOCK, 'E');
+            b = dfs(map2, var.player_x / BLOCK, var.player_y / BLOCK, 'C');
+            printf("%d\n", a);
+            printf("%d\n", b);
             mlx_hook(var.win,2,1L<<0, key_press, &var);
             mlx_hook(var.win, 17, 0, t, &var);
             mlx_loop(var.mlx);
