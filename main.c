@@ -8,21 +8,21 @@
 
 
 //for linux
-// # define UP_W				119
-// # define DOWN_S				115
-// # define LEFT_A				97
-// # define RIGHT_D			100
-// # define EXIT_ESC			65307
-// # define EXIT_BUTTON		17
+# define UP_W				119
+# define DOWN_S				115
+# define LEFT_A				97
+# define RIGHT_D			100
+# define EXIT_ESC			65307
+# define EXIT_BUTTON		17
 
 
-//for mac
-#define UP_W 13
-#define DOWN_S 1
-#define LEFT_A 0
-#define RIGHT_D 2
-#define EXIT_ESC 53
-#define EXIT_BUTTON 17
+// //for mac
+// #define UP_W 13
+// #define DOWN_S 1
+// #define LEFT_A 0
+// #define RIGHT_D 2
+// #define EXIT_ESC 53
+// #define EXIT_BUTTON 17
 
 typedef struct s_vars
 {
@@ -64,13 +64,14 @@ void *ft_realloc(void *ptr, size_t size)
         return (ptr);
     new_ptr = malloc(size);
     ft_memcpy(new_ptr, ptr, size);
+    free(ptr);
     return (new_ptr);
 }
 
 int key_press(int keycode, t_vars *p)
 {
     mlx_put_image_to_window(p->mlx, p->win, p->wall, 0, 0);
-    mlx_string_put(p->mlx, p->win,10,20, 0xFFFFFF,ft_itoa(p->move));
+    
     if (p->cntC > 0)
         p->map[p->exit_y / BLOCK][p->exit_x / BLOCK] = '1';
     if (keycode == UP_W)
@@ -115,6 +116,10 @@ int key_press(int keycode, t_vars *p)
     }
     else if (keycode == EXIT_ESC)
         exit(0);
+    char *pp;
+    pp =ft_itoa(p->move);
+    mlx_string_put(p->mlx, p->win,10,20, 0xFFFFFF,pp);
+    free(pp);
     if(p->map[p->player_y / BLOCK][p->player_x / BLOCK] == 'C')
     {
         p->cntC--;
@@ -149,35 +154,37 @@ char **make_dfs_map(t_vars p)
     char **dfs_maps;
 
     i = 0;
-    dfs_maps = (char **)malloc(sizeof(char *) * p.height);
+    dfs_maps = (char **)malloc(sizeof(char *) * (p.height + 1));
     while (i < p.height)
     {
         dfs_maps[i] = malloc(p.baselen + 1);
         ft_memcpy(dfs_maps[i], p.map[i], p.baselen + 1);
         i++;
     }
+    dfs_maps[i] = NULL;
     return (dfs_maps);
 }
 
 int dfs(char **map, int x, int y, char find)
 {
-    printf("(x = %d y = %d) val = %c\n", x, y, map[y][x]);
     int cnt;
 
-    if (map[y][x] == '1')
+    cnt = 0;
+    if(find == 'C')
     {
-        map[y][x] = 'V';
-        return 0;
+        if (map[y][x] == '1' || map[y][x] == 'E')
+            return 0;
     }
-    if(map[y][x] != 'V')
+    else
+    {
+        if (map[y][x] == '1')
+            return 0;
+    }
+    if(map[y][x] != '1')
     {
         if (map[y][x] == find)
-        {
-            map[y][x] = 'V';
-            return 1;
-        }
-        map[y][x] = 'V';
-        cnt = 0;
+            cnt++;
+        map[y][x] = '1';
         cnt += dfs(map, x - 1, y, find);
         cnt += dfs(map, x, y + 1, find);
         cnt += dfs(map, x + 1, y, find);
@@ -191,6 +198,7 @@ int main(int argc, char **argv)
 {
     int fd;
     char *line;
+    char **tmp;
     t_vars  var;
     var.height = 0;
     var.move = 0; 
@@ -210,6 +218,7 @@ int main(int argc, char **argv)
                 var.height++;
                 var.map = (char **)ft_realloc(var.map, (var.height + 1) * sizeof(char *));
             }
+            var.map[var.height] = NULL;
             // map이 제대로 적성되었는지 검증 1. x축이 잘 들어왔는가? map이 3줄 이상인가
             if (var.height < 3)
                 exit_error("The map is not valid\n");
@@ -262,8 +271,6 @@ int main(int argc, char **argv)
             if (var.cntC < 1 || cntP != 1 || cntE != 1)
                 exit_error("The map is not valid\n");
 
-           
-
             var.mlx = mlx_init();
             var.win = mlx_new_window(var.mlx, var.baselen * BLOCK, var.height * BLOCK, "img test");
             var.wall = mlx_xpm_file_to_image(var.mlx, "./img/wall.xpm", & var.img_width, &var.img_height);
@@ -313,8 +320,8 @@ int main(int argc, char **argv)
             printf("%c\n", var.map[var.player_y / BLOCK][var.player_x / BLOCK]);
             a = dfs(map1, var.player_x / BLOCK, var.player_y / BLOCK, 'E');
             b = dfs(map2, var.player_x / BLOCK, var.player_y / BLOCK, 'C');
-            printf("%d\n", a);
-            printf("%d\n", b);
+            printf("E = %d dfs = %d\n", cntE ,a);
+            printf("C = %d dfs = %d\n",var.cntC ,b);
             mlx_hook(var.win,2,1L<<0, key_press, &var);
             mlx_hook(var.win, 17, 0, t, &var);
             mlx_loop(var.mlx);
