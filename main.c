@@ -31,6 +31,7 @@ typedef struct s_vars
     void	*wall;
     void    *tile;
     void    *collection;
+    void    *enemy;
     void    *player_front;
     void    *player_back;
     void    *player_right;
