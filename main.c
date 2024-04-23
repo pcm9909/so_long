@@ -131,6 +131,8 @@ int key_press(int keycode, t_vars *p)
         p->map[p->exit_y / BLOCK][p->exit_x / BLOCK] = 'E';
         mlx_put_image_to_window(p->mlx, p->win, p->goal1, p->exit_x, p->exit_y);
     }
+    if(p->map[p->player_y / BLOCK][p->player_x / BLOCK] == 'I')
+        exit(0);
     if(p->cntC == 0 && p->map[p->player_y / BLOCK][p->player_x / BLOCK] == 'E')
         exit(0);
     return (0);
@@ -147,7 +149,10 @@ void    exit_error(char *str)
     exit(1);
 }
 
-
+void handle_enemy(t_vars *p)
+{
+    
+}
 
 char **make_dfs_map(t_vars p)
 {
@@ -173,12 +178,12 @@ int dfs(char **map, int x, int y, char find)
     cnt = 0;
     if(find == 'C')
     {
-        if (map[y][x] == '1' || map[y][x] == 'E' || map[y][x] == 'N')
+        if (map[y][x] == '1' || map[y][x] == 'E' || map[y][x] == 'I')
             return 0;
     }
     else
     {
-        if (map[y][x] == '1' || map[y][x] == 'N')
+        if (map[y][x] == '1' || map[y][x] == 'I')
             return 0;
     }
     if(map[y][x] != '1')
@@ -263,6 +268,8 @@ int main(int argc, char **argv)
                         cntP++;
                     else if (var.map[i][j] == 'E')
                         cntE++;
+                    else if (var.map[i][j] == 'I')
+                        ;
                     else if (var.map[i][j] != '1' && var.map[i][j] != '0')
                         exit_error("The map is not valid\n");
                     j++;
@@ -309,7 +316,7 @@ int main(int argc, char **argv)
                         var.exit_y = var.h;
                         mlx_put_image_to_window(var.mlx, var.win, var.goal, var.w, var.h);
                     }
-                    if(var.map[i][k] = 'N')
+                    if(var.map[i][k] == 'I')
                         mlx_put_image_to_window(var.mlx, var.win, var.enemy, var.w, var.h);
                     var.w += BLOCK;
                 }
@@ -326,6 +333,7 @@ int main(int argc, char **argv)
             if (dfs(map2, var.player_x / BLOCK, var.player_y / BLOCK, 'C') != var.cntC)
                 exit_error("The map is not valid\n");
             mlx_hook(var.win,2,1L<<0, key_press, &var);
+            //mlx_loop_hook(var.mlx,,&var)
             mlx_hook(var.win, 17, 0, t, &var);
             mlx_loop(var.mlx);
         }
