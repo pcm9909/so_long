@@ -173,12 +173,12 @@ int dfs(char **map, int x, int y, char find)
     cnt = 0;
     if(find == 'C')
     {
-        if (map[y][x] == '1' || map[y][x] == 'E')
+        if (map[y][x] == '1' || map[y][x] == 'E' || map[y][x] == 'N')
             return 0;
     }
     else
     {
-        if (map[y][x] == '1')
+        if (map[y][x] == '1' || map[y][x] == 'N')
             return 0;
     }
     if(map[y][x] != '1')
@@ -283,6 +283,7 @@ int main(int argc, char **argv)
             var.collection = mlx_xpm_file_to_image(var.mlx, "./img/collection.xpm", &var.img_width, &var.img_height);
             var.goal = mlx_xpm_file_to_image(var.mlx, "./img/exit.xpm", &var.img_width, &var.img_height);
             var.goal1 = mlx_xpm_file_to_image(var.mlx, "./img/exit1.xpm", &var.img_width, &var.img_height);
+            var.enemy = mlx_xpm_file_to_image(var.mlx, "./img/enemy.xpm", &var.img_width, &var.img_height);
             
             var.h = 0;
             for (int i = 0; i < var.height; i++)
@@ -308,6 +309,8 @@ int main(int argc, char **argv)
                         var.exit_y = var.h;
                         mlx_put_image_to_window(var.mlx, var.win, var.goal, var.w, var.h);
                     }
+                    if(var.map[i][k] = 'N')
+                        mlx_put_image_to_window(var.mlx, var.win, var.enemy, var.w, var.h);
                     var.w += BLOCK;
                 }
                 var.h += BLOCK;
