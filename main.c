@@ -55,72 +55,64 @@ typedef struct s_vars
     int     step;
 }               t_vars;
 
-void *ft_realloc(void *ptr, size_t size)
-{
-    void *new_ptr;
 
-    if (ptr == NULL)
-        return (malloc(size));
-    if (!size)
-        return (ptr);
-    new_ptr = malloc(size);
-    ft_memcpy(new_ptr, ptr, size);
-    free(ptr);
-    return (new_ptr);
+//-------------------------------
+
+void move_forward(t_vars *p)
+{
+    if(p->map[p->player_y / BLOCK - 1][p->player_x / BLOCK] != '1')
+    {
+        mlx_put_image_to_window(p->mlx, p->win, p->tile, p->player_x, p->player_y);
+        p->player_y -= BLOCK;
+        mlx_put_image_to_window(p->mlx, p->win, p->player_back, p->player_x, p->player_y);
+        p->move++;
+    }
 }
 
-int key_press(int keycode, t_vars *p)
+void move_backward(t_vars *p)
 {
-    mlx_put_image_to_window(p->mlx, p->win, p->wall, 0, 0);
+    if (p->map[p->player_y / BLOCK + 1][p->player_x / BLOCK] != '1')
+    {
+        mlx_put_image_to_window(p->mlx, p->win, p->tile, p->player_x, p->player_y);
+        p->player_y += BLOCK;
+        mlx_put_image_to_window(p->mlx, p->win, p->player_front, p->player_x, p->player_y);
+        p->move++;
+    }
+}
+
+void move_left(t_vars *p)
+{
+    if(p->map[p->player_y / BLOCK][p->player_x / BLOCK - 1] != '1')
+    {
+        mlx_put_image_to_window(p->mlx, p->win, p->tile, p->player_x, p->player_y);
+        p->player_x -= BLOCK;
+        mlx_put_image_to_window(p->mlx, p->win, p->player_left, p->player_x, p->player_y);
+        p->move++; 
+    }
+}
+
+void move_right(t_vars *p)
+{   
+    if(p->map[p->player_y / BLOCK][p->player_x / BLOCK + 1] != '1')
+    {
+        mlx_put_image_to_window(p->mlx, p->win, p->tile, p->player_x, p->player_y);
+        p->player_x += BLOCK;
+        mlx_put_image_to_window(p->mlx, p->win, p->player_right, p->player_x, p->player_y);
+        p->move++;
+    }
+}
+
+void show_cnt(t_vars *p)
+{
+    char *move_cnt;
     
-    if (p->cntC > 0)
-        p->map[p->exit_y / BLOCK][p->exit_x / BLOCK] = '1';
-    if (keycode == UP_W)
-    {
-        if(p->map[p->player_y / BLOCK - 1][p->player_x / BLOCK] != '1')
-        {
-            mlx_put_image_to_window(p->mlx, p->win, p->tile, p->player_x, p->player_y);
-            p->player_y -= BLOCK;
-            mlx_put_image_to_window(p->mlx, p->win, p->player_back, p->player_x, p->player_y);
-            p->move++;
-        }
-    }
-    if (keycode == DOWN_S)
-    {
-        if (p->map[p->player_y / BLOCK + 1][p->player_x / BLOCK] != '1')
-        {
-            mlx_put_image_to_window(p->mlx, p->win, p->tile, p->player_x, p->player_y);
-            p->player_y += BLOCK;
-            mlx_put_image_to_window(p->mlx, p->win, p->player_front, p->player_x, p->player_y);
-            p->move++;
-        }
-    }
-    else if (keycode == LEFT_A)
-    {
-        if(p->map[p->player_y / BLOCK][p->player_x / BLOCK - 1] != '1')
-        {
-            mlx_put_image_to_window(p->mlx, p->win, p->tile, p->player_x, p->player_y);
-            p->player_x -= BLOCK;
-            mlx_put_image_to_window(p->mlx, p->win, p->player_left, p->player_x, p->player_y);
-            p->move++; 
-        }
-    }
-    else if (keycode == RIGHT_D)
-    {   
-        if(p->map[p->player_y / BLOCK][p->player_x / BLOCK + 1] != '1')
-        {
-            mlx_put_image_to_window(p->mlx, p->win, p->tile, p->player_x, p->player_y);
-            p->player_x += BLOCK;
-            mlx_put_image_to_window(p->mlx, p->win, p->player_right, p->player_x, p->player_y);
-            p->move++;
-        }
-    }
-    else if (keycode == EXIT_ESC)
-        exit(0);
-    char *pp;
-    pp =ft_itoa(p->move);
-    mlx_string_put(p->mlx, p->win,10,20, 0xFFFFFF,pp);
-    free(pp);
+    move_cnt = ft_itoa(p->move);
+    mlx_string_put(p->mlx, p->win,10,20, 0xFFFFFF,move_cnt);
+    free(move_cnt);
+}
+
+void handle_exit(t_vars *p)
+{
     if(p->map[p->player_y / BLOCK][p->player_x / BLOCK] == 'C')
     {
         p->cntC--;
@@ -135,8 +127,31 @@ int key_press(int keycode, t_vars *p)
         exit(0);
     if(p->cntC == 0 && p->map[p->player_y / BLOCK][p->player_x / BLOCK] == 'E')
         exit(0);
+}
+
+int key_press(int keycode, t_vars *p)
+{
+    mlx_put_image_to_window(p->mlx, p->win, p->wall, 0, 0);
+    
+    if (p->cntC > 0)
+        p->map[p->exit_y / BLOCK][p->exit_x / BLOCK] = '1';
+    if (keycode == UP_W)
+        move_forward(p);
+    else if (keycode == DOWN_S)
+        move_backward(p);
+    else if (keycode == LEFT_A)
+        move_left(p);
+    else if (keycode == RIGHT_D)
+        move_right(p);
+    if (keycode == EXIT_ESC)
+        exit(0);
+    show_cnt(p);
+    handle_exit(p);
     return (0);
 }
+
+//-------------------------------
+
 
 int    t()
 {
@@ -149,22 +164,131 @@ void    exit_error(char *str)
     exit(1);
 }
 
-void handle_enemy(t_vars *p)
+
+
+//-----------------------------------------------------
+
+void *ft_realloc(void *ptr, size_t size)
 {
-    
+    void *new_ptr;
+
+    if (ptr == NULL)
+        return (malloc(size));
+    if (!size)
+        return (ptr);
+    new_ptr = malloc(size);
+    ft_memcpy(new_ptr, ptr, size);
+    free(ptr);
+    return (new_ptr);
+}
+void    read_map(t_vars *p, char *filename)
+{
+    int fd;
+    char *line;
+
+    p->height = 0;
+    fd = open(filename, O_RDONLY);
+    if (fd == -1) 
+        exit_error("File does not exist\n");
+    p-> map = (char **)malloc(sizeof(char *));
+    while ((line = get_next_line(fd)) > 0)
+    {
+        p->map[p->height] = ft_strdup(line);
+        free(line);
+        p->height++;
+        p->map = (char **)ft_realloc(p->map, (p->height + 1) * sizeof(char *));
+    }
+    p->map[p->height] = NULL;
 }
 
-char **make_dfs_map(t_vars p)
+void check_map_x(t_vars *var)
+{
+    if (var->height < 3)
+        exit_error("The map is not valid\n");
+    
+    var->baselen = ft_strlen(var->map[0]);
+    int j = 1;
+    while (j < var->height)
+    {
+        if (var->baselen != ft_strlen(var->map[j]))
+            exit_error("The map is not valid\n");
+        j++;
+    }
+}
+
+void check_map_y(t_vars *var)
+{
+    int i;
+    
+    i = 0;
+    while (i < var->baselen)
+    {
+        if (var->map[0][i] != '1' || var->map[var->height - 1][i] != '1')
+            exit_error("The map is not valid\n");
+        i++;
+    }
+}
+
+void check_map_border(t_vars *var)
+{
+    int i;
+    
+    i = 0;
+    while (i < var->height)
+    {
+        if (var->map[i][0] != '1' || var->map[i][var->baselen - 1] != '1')
+            exit_error("The map is not valid\n");
+        i++;
+    }
+}
+
+void check_map_input_val(t_vars *var)
+{
+    int cntP;
+    int cntE;
+    int i;
+    int j;
+    
+    cntE = 0;
+    cntP = 0;
+    var->cntC = 0;
+    i = 1;
+    while (i < var->height - 1)
+    {
+        j = 1;
+        while (j < var->baselen - 1)
+        {
+            if (var->map[i][j] == 'C')
+                var->cntC++;
+            else if (var->map[i][j] == 'P')
+                cntP++;
+            else if (var->map[i][j] == 'E')
+                cntE++;
+            else if (var->map[i][j] == 'I')
+                ;
+            else if (var->map[i][j] != '1' && var->map[i][j] != '0')
+                exit_error("The map is not valid\n");
+            printf("C = %d\n", var->cntC);
+            j++;
+        }
+        i++;
+    }
+    if (var->cntC < 1 || cntP != 1 || cntE != 1)
+        exit_error("The map is not valid\n");
+}
+
+//----------------------------------------------xpm input
+char **make_dfs_map(t_vars *var)
 {
     int i;
     char **dfs_maps;
 
     i = 0;
-    dfs_maps = (char **)malloc(sizeof(char *) * (p.height + 1));
-    while (i < p.height)
+    dfs_maps = (char **)malloc(sizeof(char *) * (var->height + 1));
+    while (i < var->height)
     {
-        dfs_maps[i] = malloc(p.baselen + 1);
-        ft_memcpy(dfs_maps[i], p.map[i], p.baselen + 1);
+        dfs_maps[i] = malloc(var->baselen + 1);
+        ft_memcpy(dfs_maps[i], var->map[i], var->baselen + 1);
         i++;
     }
     dfs_maps[i] = NULL;
@@ -200,98 +324,57 @@ int dfs(char **map, int x, int y, char find)
     return 0;
 }
 
+void check_player_path(t_vars *var)
+{
+    char **map1;
+    char **map2;
+
+    map1 = make_dfs_map(var);
+    map2 = make_dfs_map(var);
+    if (dfs(map1, var->player_x / BLOCK, var->player_y / BLOCK, 'E') != 1)
+        exit_error("The map is not valid\n");
+    if (dfs(map2, var->player_x / BLOCK, var->player_y / BLOCK, 'C') != var->cntC)
+        exit_error("The map is not valid\n");
+}
+
+void xpm_input(t_vars *var)
+{
+    var->wall = mlx_xpm_file_to_image(var->mlx, "./img/wall.xpm", & var->img_width, &var->img_height);
+    var->tile = mlx_xpm_file_to_image(var->mlx, "./img/tile.xpm", &var->img_width, &var->img_height);
+    var->player_front = mlx_xpm_file_to_image(var->mlx, "./img/player_front.xpm", &var->img_width, &var->img_height);
+    var->player_back = mlx_xpm_file_to_image(var->mlx, "./img/player_back.xpm", &var->img_width, &var->img_height);
+    var->player_right = mlx_xpm_file_to_image(var->mlx, "./img/player_right.xpm", &var->img_width, &var->img_height);
+    var->player_left = mlx_xpm_file_to_image(var->mlx, "./img/player_left.xpm", &var->img_width, &var->img_height);
+    var->collection = mlx_xpm_file_to_image(var->mlx, "./img/collection.xpm", &var->img_width, &var->img_height);
+    var->goal = mlx_xpm_file_to_image(var->mlx, "./img/exit.xpm", &var->img_width, &var->img_height);
+    var->goal1 = mlx_xpm_file_to_image(var->mlx, "./img/exit1.xpm", &var->img_width, &var->img_height);
+    var->enemy = mlx_xpm_file_to_image(var->mlx, "./img/enemy.xpm", &var->img_width, &var->img_height);
+}
+
+// cntC값이 안 바뀜
+
 int main(int argc, char **argv)
 {
     int fd;
     char *line;
     char **tmp;
     t_vars  var;
-    var.height = 0;
+
     var.move = 0; 
+
 
     if (argc == 2)
     {
         if (ft_strncmp(ft_strchr(argv[1], '.'), ".ber\0", 5) == 0)
         {
-            fd = open(argv[1], O_RDONLY);
-            if (fd == -1) 
-                exit_error("File does not exist\n");
-            var.map = (char **)malloc(sizeof(char *));
-            while ((line = get_next_line(fd)) > 0)
-            {
-                var.map[var.height] = ft_strdup(line);
-                free(line);
-                var.height++;
-                var.map = (char **)ft_realloc(var.map, (var.height + 1) * sizeof(char *));
-            }
-            var.map[var.height] = NULL;
-            // map이 제대로 적성되었는지 검증 1. x축이 잘 들어왔는가? map이 3줄 이상인가
-            if (var.height < 3)
-                exit_error("The map is not valid\n");
-            var.baselen = ft_strlen(var.map[0]);
-            int j = 1;
-            while (j < var.height)
-            {
-                if (var.baselen != ft_strlen(var.map[j]))
-                    exit_error("The map is not valid\n");
-                j++;
-            }
-            // map이 제대로 적성되었는지 검증 2. y축이 잘 들어왔는가? map이 3줄 이상인가
-            int i = 0;
-            while (i < var.baselen)
-            {
-                if (var.map[0][i] != '1' || var.map[var.height - 1][i] != '1')
-                    exit_error("The map is not valid\n");
-                i++;
-            }
-            //check 테두리
-            i = 0;
-            while (i < var.height)
-            {
-                if (var.map[i][0] != '1' || var.map[i][var.baselen - 1] != '1')
-                    exit_error("The map is not valid\n");
-                i++;
-            }
-            var.cntC = 0;
-            int cntP = 0;
-            int cntE = 0;
-
-            i = 1;
-            while (i < var.height - 1)
-            {
-                int j = 1;
-                while (j < var.baselen - 1)
-                {
-                    if (var.map[i][j] == 'C')
-                        var.cntC++;
-                    else if (var.map[i][j] == 'P')
-                        cntP++;
-                    else if (var.map[i][j] == 'E')
-                        cntE++;
-                    else if (var.map[i][j] == 'I')
-                        ;
-                    else if (var.map[i][j] != '1' && var.map[i][j] != '0')
-                        exit_error("The map is not valid\n");
-                    j++;
-                }
-                i++;
-            }
-            if (var.cntC < 1 || cntP != 1 || cntE != 1)
-                exit_error("The map is not valid\n");
+            read_map(&var, argv[1]);
+            check_map_x(&var);
+            check_map_y(&var);
+            check_map_border(&var);
 
             var.mlx = mlx_init();
             var.win = mlx_new_window(var.mlx, var.baselen * BLOCK, var.height * BLOCK, "img test");
-            var.wall = mlx_xpm_file_to_image(var.mlx, "./img/wall.xpm", & var.img_width, &var.img_height);
-            var.tile = mlx_xpm_file_to_image(var.mlx, "./img/tile.xpm", &var.img_width, &var.img_height);
-            var.player_front = mlx_xpm_file_to_image(var.mlx, "./img/player_front.xpm", &var.img_width, &var.img_height);
-            var.player_back = mlx_xpm_file_to_image(var.mlx, "./img/player_back.xpm", &var.img_width, &var.img_height);
-            var.player_right = mlx_xpm_file_to_image(var.mlx, "./img/player_right.xpm", &var.img_width, &var.img_height);
-            var.player_left = mlx_xpm_file_to_image(var.mlx, "./img/player_left.xpm", &var.img_width, &var.img_height);
-            var.collection = mlx_xpm_file_to_image(var.mlx, "./img/collection.xpm", &var.img_width, &var.img_height);
-            var.goal = mlx_xpm_file_to_image(var.mlx, "./img/exit.xpm", &var.img_width, &var.img_height);
-            var.goal1 = mlx_xpm_file_to_image(var.mlx, "./img/exit1.xpm", &var.img_width, &var.img_height);
-            var.enemy = mlx_xpm_file_to_image(var.mlx, "./img/enemy.xpm", &var.img_width, &var.img_height);
-            
+            xpm_input(&var);
             var.h = 0;
             for (int i = 0; i < var.height; i++)
             {   
@@ -322,18 +405,8 @@ int main(int argc, char **argv)
                 }
                 var.h += BLOCK;
             }
-            char **map1;
-            char **map2;
-            int a;
-            int b;
-            map1 = make_dfs_map(var);
-            map2 = make_dfs_map(var);
-            if (dfs(map1, var.player_x / BLOCK, var.player_y / BLOCK, 'E') != 1)
-                exit_error("The map is not valid\n");
-            if (dfs(map2, var.player_x / BLOCK, var.player_y / BLOCK, 'C') != var.cntC)
-                exit_error("The map is not valid\n");
+            check_player_path(&var);
             mlx_hook(var.win,2,1L<<0, key_press, &var);
-            //mlx_loop_hook(var.mlx,,&var)
             mlx_hook(var.win, 17, 0, t, &var);
             mlx_loop(var.mlx);
         }
