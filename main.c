@@ -204,14 +204,14 @@ void    read_map(t_vars *p, char *filename)
 void check_map_x(t_vars *var)
 {
     if (var->height < 3)
-        exit_error("The map is not valid\n");
+        exit_error("1The map is not valid\n");
     
     var->baselen = ft_strlen(var->map[0]);
     int j = 1;
     while (j < var->height)
     {
         if (var->baselen != ft_strlen(var->map[j]))
-            exit_error("The map is not valid\n");
+            exit_error("2The map is not valid\n");
         j++;
     }
 }
@@ -224,7 +224,7 @@ void check_map_y(t_vars *var)
     while (i < var->baselen)
     {
         if (var->map[0][i] != '1' || var->map[var->height - 1][i] != '1')
-            exit_error("The map is not valid\n");
+            exit_error("3The map is not valid\n");
         i++;
     }
 }
@@ -237,7 +237,7 @@ void check_map_border(t_vars *var)
     while (i < var->height)
     {
         if (var->map[i][0] != '1' || var->map[i][var->baselen - 1] != '1')
-            exit_error("The map is not valid\n");
+            exit_error("4The map is not valid\n");
         i++;
     }
 }
@@ -267,14 +267,14 @@ void check_map_input_val(t_vars *var)
             else if (var->map[i][j] == 'I')
                 ;
             else if (var->map[i][j] != '1' && var->map[i][j] != '0')
-                exit_error("The map is not valid\n");
-            printf("C = %d\n", var->cntC);
+                exit_error("5The map is not valid\n");
             j++;
         }
         i++;
     }
+    printf("%d", var->cntC);
     if (var->cntC < 1 || cntP != 1 || cntE != 1)
-        exit_error("The map is not valid\n");
+        exit_error("6The map is not valid\n");
 }
 
 //----------------------------------------------xpm input
@@ -332,9 +332,9 @@ void check_player_path(t_vars *var)
     map1 = make_dfs_map(var);
     map2 = make_dfs_map(var);
     if (dfs(map1, var->player_x / BLOCK, var->player_y / BLOCK, 'E') != 1)
-        exit_error("The map is not valid\n");
-    if (dfs(map2, var->player_x / BLOCK, var->player_y / BLOCK, 'C') != var->cntC)
-        exit_error("The map is not valid\n");
+        exit_error("7The map is not valid\n");
+    // if (dfs(map2, var->player_x / BLOCK, var->player_y / BLOCK, 'C') != var->cntC)
+    //     exit_error("8The map is not valid\n");
 }
 
 void xpm_input(t_vars *var)
@@ -405,6 +405,7 @@ int main(int argc, char **argv)
                 }
                 var.h += BLOCK;
             }
+            check_map_input_val(&var);
             check_player_path(&var);
             mlx_hook(var.win,2,1L<<0, key_press, &var);
             mlx_hook(var.win, 17, 0, t, &var);
