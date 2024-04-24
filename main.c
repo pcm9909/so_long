@@ -1,39 +1,52 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   main.c                                             :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: chunpark <marvin@42.fr>                    +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2024/04/24 21:29:43 by chunpark          #+#    #+#             */
+/*   Updated: 2024/04/24 21:33:23 by chunpark         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "so_long.h"
 
-int    close_win()
+int	close_win()
 {
-   exit(0);
+	exit(0);
 }
 
-void    exit_error(char *str)
+void	exit_error(char *str)
 {
-    ft_putstr_fd(str,1);
-    exit(1);
+	ft_putstr_fd(str, 1);
+	exit(1);
 }
 
-int main(int argc, char *argv[])
+int	main(int argc, char **argc)
 {
-    t_vars  var;
-    var.move = 0;    
-    if (argc == 2)
-    {
-        if (ft_strncmp(ft_strchr(argv[1], '.'), ".ber\0", 5) == 0)
-        {
-            read_map(&var, argv[1]);
-            check_map(&var);
-            var.mlx = mlx_init();
-            var.win = mlx_new_window(var.mlx, var.baselen * BLOCK, var.height * BLOCK, "Pocketmon");
-            draw_map(&var);
-            check_player_path(&var);
-            mlx_hook(var.win,2,1L<<0, key_press, &var);
-            mlx_hook(var.win, 17, 0, close_win, &var);
-            mlx_loop(var.mlx);
-            exit(0);
-        }
-        else
-            exit_error("ERROR CODE 9 : Please enter the [.ber] file\n");
-    }
-    else
-        exit_error("ERROR CODE 10 : The number of inputs is not correct\n");
-        exit(0);
+	t_vars	var;
+
+	var.move = 0;
+	if (argc == 2)
+	{
+		if (ft_strncmp(ft_strchr(argv[1], '.'), ".ber\0", 5) == 0)
+		{
+			read_map(&var, argv[1]);
+			check_map(&var);
+			var.mlx = mlx_init();
+			var.win = mlx_new_window(var.mlx, var.baselen * BLOCK, var.height * BLOCK, "Pocketmon");
+			draw_map(&var);
+			check_player_path(&var);
+			mlx_hook(var.win, 2, 1L << 0, key_press, &var);
+			mlx_hook(var.win, 17, 0, close_win, &var);
+			mlx_loop(var.mlx);
+			exit(0);
+		}
+		else
+			exit_error("ERROR CODE 9 : Please enter the [.ber] file\n");
+	}
+	else
+		exit_error("ERROR CODE 10 : The number of inputs is not correct\n");
+	exit(0);
 }
