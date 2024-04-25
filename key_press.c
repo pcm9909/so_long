@@ -1,3 +1,15 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   key_press.c                                        :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: chunpark <marvin@42.fr>                    +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2024/04/25 14:48:30 by chunpark          #+#    #+#             */
+/*   Updated: 2024/04/25 14:48:31 by chunpark         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "so_long.h"
 
 void	show_cnt(t_vars *p)
@@ -6,7 +18,7 @@ void	show_cnt(t_vars *p)
 
 	move_cnt = ft_itoa(p->move);
 	mlx_string_put(p->mlx, p->win, 10, 20, 0xFFFFFF, move_cnt);
-	free(move_cnt);
+	//free(move_cnt);
 }
 
 void	handle_exit(t_vars *p)

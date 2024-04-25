@@ -1,3 +1,15 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   verification_map.c                                 :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: chunpark <marvin@42.fr>                    +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2024/04/25 14:58:52 by chunpark          #+#    #+#             */
+/*   Updated: 2024/04/25 14:58:53 by chunpark         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "so_long.h"
 
 char	**make_dfs_map(t_vars *var)
@@ -70,6 +82,6 @@ void	check_player_path(t_vars *var)
 		exit_error("ERROR CODE 7 : The map is not valid\n");
 	if (dfs(map2, var->player_x / BLOCK, var->player_y / BLOCK, 'C') != var->cntC)
 		exit_error("ERROR CODE 8 : The map is not valid\n");
-	free_map(map1);
-	free_map(map2);
+	//free_map(map1);
+	//free_map(map2);
 }

@@ -1,18 +1,33 @@
-#include "./libft/libft.h"
-#include "./get_next_line/get_next_line.h"
-#include "./mlx/mlx.h"
-#include <stdio.h>
-#include <stdlib.h>
-#include <fcntl.h>
-#define BLOCK 64
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   so_long.h                                          :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: chunpark <marvin@42.fr>                    +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2024/04/25 14:53:25 by chunpark          #+#    #+#             */
+/*   Updated: 2024/04/25 14:58:10 by chunpark         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
+#ifndef SO_LONG_H
+# define SO_LONG_H
+
+# include "./libft/libft.h"
+# include "./get_next_line/get_next_line.h"
+# include "./mlx/mlx.h"
+# include <stdio.h>
+# include <stdlib.h>
+# include <fcntl.h>
+# define BLOCK 64
 
 //for linux
-#define UP_W				119
-#define DOWN_S				115
-#define LEFT_A				97
-#define RIGHT_D			100
-#define EXIT_ESC			65307
-#define EXIT_BUTTON		17
+# define UP_W				119
+# define DOWN_S				115
+# define LEFT_A				97
+# define RIGHT_D			100
+# define EXIT_ESC			65307
+# define EXIT_BUTTON		17
 
 // //for mac
 // #define UP_W 13
@@ -21,7 +36,6 @@
 // #define RIGHT_D 2
 // #define EXIT_ESC 53
 // #define EXIT_BUTTON 17
-
 typedef struct	s_vars
 {
 	void	*mlx;
@@ -95,3 +109,5 @@ int		key_press(int keycode, t_vars *p);
 char	**make_dfs_map(t_vars *var);
 int		dfs(char **map, int x, int y, char find);
 void	check_player_path(t_vars *var);
+
+#endif

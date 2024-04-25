@@ -1,3 +1,15 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   read_map.c                                         :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: chunpark <marvin@42.fr>                    +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2024/04/25 14:58:45 by chunpark          #+#    #+#             */
+/*   Updated: 2024/04/25 14:58:47 by chunpark         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "so_long.h"
 
 void	*ft_realloc(void *ptr, size_t size)
@@ -7,7 +19,10 @@ void	*ft_realloc(void *ptr, size_t size)
 	if (ptr == NULL)
 		return (malloc(size));
 	if (!size)
+	{
+		free(ptr);
 		return (ptr);
+	}
 	new_ptr = malloc(size);
 	ft_memcpy(new_ptr, ptr, size);
 	free(ptr);
