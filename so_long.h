@@ -6,14 +6,13 @@
 #include <fcntl.h>
 #define BLOCK 64
 
-
 //for linux
-# define UP_W				119
-# define DOWN_S				115
-# define LEFT_A				97
-# define RIGHT_D			100
-# define EXIT_ESC			65307
-# define EXIT_BUTTON		17
+#define UP_W				119
+#define DOWN_S				115
+#define LEFT_A				97
+#define RIGHT_D			100
+#define EXIT_ESC			65307
+#define EXIT_BUTTON		17
 
 // //for mac
 // #define UP_W 13
@@ -23,76 +22,76 @@
 // #define EXIT_ESC 53
 // #define EXIT_BUTTON 17
 
-typedef struct s_vars
+typedef struct	s_vars
 {
-    void    *mlx;
-    void    *win;
-    void	*wall;
-    void    *tile;
-    void    *collection;
-    void    *enemy;
-    void    *player_front;
-    void    *player_back;
-    void    *player_right;
-    void    *player_left;
-    void    *goal;
-    void    *goal1; 
+	void	*mlx;
+	void	*win;
+	void	*wall;
+	void	*tile;
+	void	*collection;
+	void	*enemy;
+	void	*player_front;
+	void	*player_back;
+	void	*player_right;
+	void	*player_left;
+	void	*goal;
+	void	*goal1;
 	int		img_width;
 	int		img_height;
-    char    **map;
-    char    **dfs_maps;
-    int     player_x;
-    int     player_y;
-    int     exit_x;
-    int     exit_y;
-    int     baselen;
-    int     height;
-    int     h;
-    int     w;
-    int     cntE;
-    int     cntP;
-    int     cntC;
-    int     move;
-    int     step;
-}               t_vars;
+	char	**map;
+	char	**dfs_maps;
+	int		player_x;
+	int		player_y;
+	int		exit_x;
+	int		exit_y;
+	int		baselen;
+	int		height;
+	int		h;
+	int		w;
+	int		cntE;
+	int		cntP;
+	int		cntC;
+	int		move;
+	int		step;
+}		t_vars;
 
-void    exit_error(char *str);
+void	exit_error(char *str);
 
 //checkmap.c
-void check_map_x(t_vars *var);
-void check_map_y(t_vars *var);
-void check_map_border(t_vars *var);
-void check_map_input_val(t_vars *var);
-void check_map(t_vars *var);
+void	check_map_x(t_vars *var);
+void	check_map_y(t_vars *var);
+void	check_map_border(t_vars *var);
+void	check_map_input_val(t_vars *var);
+void	check_map(t_vars *var);
 
 //move.c
-void move_forward(t_vars *p);
-void move_backward(t_vars *p);
-void move_left(t_vars *p);
-void move_right(t_vars *p);
+void	move_forward(t_vars *p);
+void	move_backward(t_vars *p);
+void	move_left(t_vars *p);
+void	move_right(t_vars *p);
 
 //read_map.c
-void *ft_realloc(void *ptr, size_t size);
-void    read_map(t_vars *p, char *filename);
+void	*ft_realloc(void *ptr, size_t size);
+void	read_map(t_vars *p, char *filename);
 
 //put_img.c
-void xpm_input(t_vars *var);
+void	xpm_input(t_vars *var);
 
 //draw_map.c
-void handle_wall(t_vars *var, int i, int k);
-void handle_tile(t_vars *var, int i, int k);
-void handle_player(t_vars *var, int i, int k);
-void handle_collection(t_vars *var, int i, int k);
-void handle_exits(t_vars *var, int i, int k);
-void handle_enemy(t_vars *var, int i, int k);
-void draw_map(t_vars *var);
+void	handle_wall(t_vars *var, int i, int k);
+void	handle_tile(t_vars *var, int i, int k);
+void	handle_player(t_vars *var, int i, int k);
+void	handle_collection(t_vars *var, int i, int k);
+void	handle_exits(t_vars *var, int i, int k);
+void	handle_enemy(t_vars *var, int i, int k);
+void	draw_map(t_vars *var);
 
 //key_press.c
-void show_cnt(t_vars *p);
-void handle_exit(t_vars *p);
-int key_press(int keycode, t_vars *p);
+void	show_cnt(t_vars *p);
+void	handle_exit(t_vars *p);
+int		key_press(int keycode, t_vars *p);
 
 //verification_map.c
-char **make_dfs_map(t_vars *var);
-int dfs(char **map, int x, int y, char find);
-void check_player_path(t_vars *var);
+char	**make_dfs_map(t_vars *var);
+int		dfs(char **map, int x, int y, char find);
+void	check_player_path(t_vars *var);

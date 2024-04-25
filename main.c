@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   main.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: chunpark <marvin@42.fr>                    +#+  +:+       +#+        */
+/*   By: chunpark <chunpark@student.42gyeongsan.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/24 21:29:43 by chunpark          #+#    #+#             */
-/*   Updated: 2024/04/24 21:33:23 by chunpark         ###   ########.fr       */
+/*   Updated: 2024/04/25 02:10:11 by chunpark         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,7 +23,7 @@ void	exit_error(char *str)
 	exit(1);
 }
 
-int	main(int argc, char **argc)
+int	main(int argc, char **argv)
 {
 	t_vars	var;
 
