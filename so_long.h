@@ -6,7 +6,7 @@
 /*   By: chunpark <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/25 14:53:25 by chunpark          #+#    #+#             */
-/*   Updated: 2024/04/25 14:58:10 by chunpark         ###   ########.fr       */
+/*   Updated: 2024/04/25 20:11:21 by chunpark         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -36,7 +36,7 @@
 // #define RIGHT_D 2
 // #define EXIT_ESC 53
 // #define EXIT_BUTTON 17
-typedef struct	s_vars
+typedef struct s_vars
 {
 	void	*mlx;
 	void	*win;
@@ -62,12 +62,12 @@ typedef struct	s_vars
 	int		height;
 	int		h;
 	int		w;
-	int		cntE;
-	int		cntP;
-	int		cntC;
+	int		cnt_e;
+	int		cnt_p;
+	int		cnt_c;
 	int		move;
 	int		step;
-}		t_vars;
+}				t_vars;
 
 void	exit_error(char *str);
 
@@ -85,13 +85,15 @@ void	move_left(t_vars *p);
 void	move_right(t_vars *p);
 
 //read_map.c
-void	*ft_realloc(void *ptr, size_t size);
+void	*ft_realloc(void *ptr, size_t old_size, size_t new_size);
 void	read_map(t_vars *p, char *filename);
 
 //put_img.c
-void	xpm_input(t_vars *var);
+void	xpm_put_player(t_vars *var);
+void	xpm_put_structure(t_vars *var);
+void	xpm_put(t_vars *var);
 
-//draw_map.c
+//draw_map1.c draw_map2.c
 void	handle_wall(t_vars *var, int i, int k);
 void	handle_tile(t_vars *var, int i, int k);
 void	handle_player(t_vars *var, int i, int k);

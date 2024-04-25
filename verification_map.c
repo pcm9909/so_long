@@ -6,7 +6,7 @@
 /*   By: chunpark <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/25 14:58:52 by chunpark          #+#    #+#             */
-/*   Updated: 2024/04/25 14:58:53 by chunpark         ###   ########.fr       */
+/*   Updated: 2024/04/25 19:56:10 by chunpark         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -80,8 +80,9 @@ void	check_player_path(t_vars *var)
 	map2 = make_dfs_map(var);
 	if (dfs(map1, var->player_x / BLOCK, var->player_y / BLOCK, 'E') != 1)
 		exit_error("ERROR CODE 7 : The map is not valid\n");
-	if (dfs(map2, var->player_x / BLOCK, var->player_y / BLOCK, 'C') != var->cntC)
+	if (dfs(map2, var->player_x / BLOCK, var->player_y / BLOCK, \
+				'C') != var->cnt_c)
 		exit_error("ERROR CODE 8 : The map is not valid\n");
-	//free_map(map1);
-	//free_map(map2);
+	free_map(map1);
+	free_map(map2);
 }

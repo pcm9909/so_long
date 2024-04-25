@@ -6,7 +6,7 @@
 /*   By: chunpark <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/25 14:49:20 by chunpark          #+#    #+#             */
-/*   Updated: 2024/04/25 14:52:50 by chunpark         ###   ########.fr       */
+/*   Updated: 2024/04/25 20:16:38 by chunpark         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -59,30 +59,27 @@ void	check_map_input_val(t_vars *var)
 	int	i;
 	int	j;
 
-	var->cntE = 0;
-	var->cntP = 0;
-	var->cntC = 0;
-	i = 1;
-	while (i < var->height - 1)
+	var->cnt_e = 0;
+	var->cnt_p = 0;
+	var->cnt_c = 0;
+	i = 0;
+	while (++i < var->height - 1)
 	{
-		j = 1;
-		while (j < var->baselen - 1)
+		j = 0;
+		while (++j < var->baselen - 1)
 		{
 			if (var->map[i][j] == 'C')
-				var->cntC++;
+				var->cnt_c++;
 			else if (var->map[i][j] == 'P')
-				var->cntP++;
+				var->cnt_p++;
 			else if (var->map[i][j] == 'E')
-				var->cntE++;
-			else if (var->map[i][j] == 'I')
-				;
-			else if (var->map[i][j] != '1' && var->map[i][j] != '0')
+				var->cnt_e++;
+			else if (var->map[i][j] != '1' && var->map[i][j] != '0' && \
+					var->map[i][j] != 'I')
 				exit_error("ERROR CODE 5 : The map is not valid\n");
-			j++;
 		}
-		i++;
 	}
-	if (var->cntC < 1 || var->cntP != 1 || var->cntE != 1)
+	if (var->cnt_c < 1 || var->cnt_p != 1 || var->cnt_e != 1)
 		exit_error("ERROR CODE 6 : The map is not valid\n");
 }
 

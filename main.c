@@ -6,13 +6,13 @@
 /*   By: chunpark <chunpark@student.42gyeongsan.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/24 21:29:43 by chunpark          #+#    #+#             */
-/*   Updated: 2024/04/25 02:10:11 by chunpark         ###   ########.fr       */
+/*   Updated: 2024/04/25 21:37:37 by chunpark         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "so_long.h"
 
-int	close_win()
+int	close_win(void)
 {
 	exit(0);
 }
@@ -25,6 +25,8 @@ void	exit_error(char *str)
 
 int	main(int argc, char **argv)
 {
+	// char a[10];
+	// read(0,a,3);
 	t_vars	var;
 
 	var.move = 0;
@@ -35,7 +37,8 @@ int	main(int argc, char **argv)
 			read_map(&var, argv[1]);
 			check_map(&var);
 			var.mlx = mlx_init();
-			var.win = mlx_new_window(var.mlx, var.baselen * BLOCK, var.height * BLOCK, "Pocketmon");
+			var.win = mlx_new_window(var.mlx, \
+					var.baselen * BLOCK, var.height * BLOCK, "Pocketmon");
 			draw_map(&var);
 			check_player_path(&var);
 			mlx_hook(var.win, 2, 1L << 0, key_press, &var);

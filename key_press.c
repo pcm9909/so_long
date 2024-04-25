@@ -6,7 +6,7 @@
 /*   By: chunpark <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/25 14:48:30 by chunpark          #+#    #+#             */
-/*   Updated: 2024/04/25 14:48:31 by chunpark         ###   ########.fr       */
+/*   Updated: 2024/04/25 19:55:37 by chunpark         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,31 +18,32 @@ void	show_cnt(t_vars *p)
 
 	move_cnt = ft_itoa(p->move);
 	mlx_string_put(p->mlx, p->win, 10, 20, 0xFFFFFF, move_cnt);
-	//free(move_cnt);
+	free(move_cnt);
 }
 
 void	handle_exit(t_vars *p)
 {
 	if (p->map[p->player_y / BLOCK][p->player_x / BLOCK] == 'C')
 	{
-		p->cntC--;
+		p->cnt_c--;
 		p->map[p->player_y / BLOCK][p->player_x / BLOCK] = '0';
 	}
-	if (p->cntC == 0)
+	if (p->cnt_c == 0)
 	{
 		p->map[p->exit_y / BLOCK][p->exit_x / BLOCK] = 'E';
 		mlx_put_image_to_window(p->mlx, p->win, p->goal1, p->exit_x, p->exit_y);
 	}
 	if (p->map[p->player_y / BLOCK][p->player_x / BLOCK] == 'I')
 		exit(0);
-	if (p->cntC == 0 && p->map[p->player_y / BLOCK][p->player_x / BLOCK] == 'E')
+	if (p->cnt_c == 0 && \
+			p->map[p->player_y / BLOCK][p->player_x / BLOCK] == 'E')
 		exit(0);
 }
 
 int	key_press(int keycode, t_vars *p)
 {
 	mlx_put_image_to_window(p->mlx, p->win, p->wall, 0, 0);
-	if (p->cntC > 0)
+	if (p->cnt_c > 0)
 		p->map[p->exit_y / BLOCK][p->exit_x / BLOCK] = '1';
 	if (keycode == UP_W)
 		move_forward(p);
