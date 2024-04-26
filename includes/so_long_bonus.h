@@ -1,17 +1,17 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   so_long.h                                          :+:      :+:    :+:   */
+/*   so_long_bonus.h                                    :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: chunpark <chunpark@student.42gyeongsan.    +#+  +:+       +#+        */
+/*   By: chunpark <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2024/04/25 14:53:25 by chunpark          #+#    #+#             */
-/*   Updated: 2024/04/26 13:37:44 by chunpark         ###   ########.fr       */
+/*   Created: 2024/04/26 16:01:09 by chunpark          #+#    #+#             */
+/*   Updated: 2024/04/26 16:01:30 by chunpark         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#ifndef SO_LONG_H
-# define SO_LONG_H
+#ifndef SO_LONG_BONUS_H
+# define SO_LONG_BONUS_H
 
 # include "../utils/libft/libft.h"
 # include "../utils/get_next_line/get_next_line.h"
@@ -41,8 +41,8 @@ typedef struct s_vars
 	void	*win;
 	void	*wall;
 	void	*tile;
-	void	*enemy;
 	void	*collection;
+	void	*enemy;
 	void	*player_front;
 	void	*player_back;
 	void	*player_right;
@@ -69,42 +69,43 @@ typedef struct s_vars
 
 void	exit_error(char *str);
 
-//map_validation.c
+//map_validation_bonus.c
 void	validate_map_width(t_vars *var);
 void	validate_map_height(t_vars *var);
 void	validate_map_border(t_vars *var);
 void	validate_map_elements(t_vars *var);
 void	validate_map_structure(t_vars *var);
 
-//player_movements.c
+//player_movements_bonus.c
 void	move_forward(t_vars *p);
 void	move_backward(t_vars *p);
 void	move_left(t_vars *p);
 void	move_right(t_vars *p);
 
-//load_map.c
+//load_map_bonus.c
 void	*ft_realloc(void *ptr, size_t old_size, size_t new_size);
 void	load_map_from_file(t_vars *p, char *filename);
 
-//put_img.c
+//put_img_bonus.c
 void	load_player_image(t_vars *var);
 void	load_structure_image(t_vars *var);
 void	load_image(t_vars *var);
 
-//draw_map_1.c draw_map_2.c
+//draw_map_1_bonus.c draw_map_2_bonus.c
 void	draw_wall(t_vars *var, int i, int k);
 void	draw_tile(t_vars *var, int i, int k);
 void	draw_player(t_vars *var, int i, int k);
 void	draw_collection(t_vars *var, int i, int k);
 void	draw_exit(t_vars *var, int i, int k);
+void	draw_enemy(t_vars *var, int i, int k);
 void	draw_map(t_vars *var);
 
-//key_press_handler.c
+//key_press_handler_bonus.c
 void	display_move_cnt(t_vars *p);
 void	process_exit_conditions(t_vars *p);
 int		process_key_press(int keycode, t_vars *p);
 
-//map_verification.c
+//map_verification_bonus.c
 char	**create_dfs_map_copy(t_vars *var);
 void	free_map_memory(char **map);
 int		dfs(char **map, int x, int y, char find);
