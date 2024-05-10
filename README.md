@@ -13,11 +13,13 @@ ubuntu
 make
 ```
 m1
+```
 Makefile에 all 부분 수정 필요 
-
 -Lmlx -lmlx -lXext -lX11 <- 이부분을 아래와 같이 변경 후 컴파일 
-
 -I. -Lmlx -lmlx -framework OpenGL -framework Appkit
+
+make
+```
 
 ## 맵 만들기 규칙
 1. 파일명이 .ber로 끝날 것
